@@ -65,6 +65,9 @@ pkgs.stdenvNoCC.mkDerivation {
   dontUnpack = true;
   enableParallelBuilding = true;
   inherit nativeBuildInputs;
+  # meson runs libplacebo's generators with its own interpreter, not the
+  # python on PATH, so point it at jinja2 explicitly.
+  PYTHONPATH = "${python}/${python.sitePackages}";
   configurePhase = ''
     meson setup build $src \
       --native-file ${nativeFile} \
