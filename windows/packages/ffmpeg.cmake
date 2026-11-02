@@ -158,8 +158,8 @@ ExternalProject_Add(ffmpeg
         --enable-decoder=vplayer
         --enable-decoder=webvtt
         --enable-decoder=movtext
-        --enable-decoder=hdmv_pgs_subtitle
-        --enable-decoder=cc_dec
+        --enable-decoder=pgssub
+        --enable-decoder=ccaption
 
         --enable-decoder=mjpeg
         --enable-decoder=ljpeg
