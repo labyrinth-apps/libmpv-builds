@@ -90,5 +90,6 @@ pkgs.stdenvNoCC.mkDerivation {
     # keep config.h + config.mak for the licence gate (scripts/licence_gate.sh)
     cp "$(find build -name config.h -not -path '*/dist/*' -not -path '*/tests/*' | head -1)" $out/share/ffmpeg/config.h
     cp "$(find build -name config.mak -path '*ffbuild*' | head -1)" $out/share/ffmpeg/config.mak
+    cp "$(find build -name config_components.h -not -path '*/dist/*' | head -1)" $out/share/ffmpeg/config_components.h
   '';
 }

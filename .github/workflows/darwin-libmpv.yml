@@ -92,7 +92,7 @@ jobs:
           $NIX_BUILD ".#${DEBUG_TARGET:-$TARGET}"
           ls -la result/
 
-      - name: Licence gate
+      - name: Licence + features gate
         if: ${{ inputs.target == '' }}
         run: |
           attrs=()
@@ -102,6 +102,7 @@ jobs:
           outs=$($NIX_BUILD --no-link --print-out-paths "${attrs[@]}")
           echo "$outs"
           scripts/licence_gate.sh $outs
+          scripts/features_gate.sh $outs
           for o in $outs; do
             [ -f "$o/share/mpv/configure.log" ] && grep -iE "Detected macOS SDK|libplacebo|gl-cocoa|ios-gl|videotoolbox|audiounit|coreaudio" "$o/share/mpv/configure.log" | head -40 || true
           done
@@ -148,7 +149,7 @@ jobs:
       - name: Run smoke test
         run: |
           DYLD_FRAMEWORK_PATH="$PWD/fw" python windows/smoke/smoke.py fw/Mpv.framework/Mpv \
-            --expect-mpv "v${MPV_VERSION}" --expect-ffmpeg "${FFMPEG_VERSION}"
+            --expect-mpv "v${MPV_VERSION}" --expect-ffmpeg "${FFMPEG_VERSION}" --extended
       - name: HTTPS certificate verification (diagnostic, never fails)
         continue-on-error: true
         run: |

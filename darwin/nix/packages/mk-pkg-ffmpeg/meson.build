@@ -212,6 +212,30 @@ video_default_options = [
     '--enable-decoder=webvtt',
     '--enable-decoder=movtext',
 
+    # owner-approved additions (same scope as windows/, f74567b). Configure
+    # takes component names: pgssub = hdmv_pgs_subtitle, ccaption = "cc_dec".
+    '--enable-decoder=truehd',
+    '--enable-decoder=mlp',
+    '--enable-decoder=vc1',
+    '--enable-decoder=vc1image',
+    '--enable-decoder=ccaption', # EIA-608
+    '--enable-demuxer=mlp',
+    '--enable-demuxer=vc1',
+    '--enable-demuxer=truehd',
+    '--enable-parser=mlp',
+    '--enable-parser=vc1',
+    # deinterlacing (mpv inserts these through lavfi) + graph plumbing
+    '--enable-filter=bwdif',
+    '--enable-filter=yadif',
+    '--enable-filter=buffer',
+    '--enable-filter=buffersink',
+    '--enable-filter=abuffer',
+    '--enable-filter=abuffersink',
+    '--enable-filter=format',
+    '--enable-filter=aformat',
+    '--enable-filter=null',
+    '--enable-filter=anull',
+
     # parsers
     '--enable-parser=h263',
     '--enable-parser=h264',
