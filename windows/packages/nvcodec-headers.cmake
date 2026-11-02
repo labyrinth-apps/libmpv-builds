@@ -1,5 +1,6 @@
 ExternalProject_Add(nvcodec-headers
     GIT_REPOSITORY https://github.com/FFmpeg/nv-codec-headers.git
+    GIT_RESET f2053071ea93137255b6dcf42e9b4c9e0965a44e
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

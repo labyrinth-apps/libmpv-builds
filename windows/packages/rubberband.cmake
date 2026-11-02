@@ -2,6 +2,7 @@ ExternalProject_Add(rubberband
     DEPENDS
         libsamplerate
     GIT_REPOSITORY https://github.com/breakfastquay/rubberband.git
+    GIT_RESET e4296ac80b1170018a110bc326fd0d45a0eb27d6
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

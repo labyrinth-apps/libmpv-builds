@@ -9,6 +9,7 @@ endif()
 
 ExternalProject_Add(x265
     GIT_REPOSITORY https://github.com/Multicorewareinc/x265.git
+    GIT_RESET 0807b60bccc5fd0f70a130be9ec20f6df25939fe
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

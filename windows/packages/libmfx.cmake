@@ -1,5 +1,6 @@
 ExternalProject_Add(libmfx
     GIT_REPOSITORY https://github.com/lu-zero/mfx_dispatch.git
+    GIT_RESET f6aac4576826ed821c81231fdfb0d24047158e7d
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

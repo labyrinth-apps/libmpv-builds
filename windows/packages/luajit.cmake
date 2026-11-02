@@ -30,6 +30,7 @@ ExternalProject_Add(luajit
     DEPENDS
         libiconv
     GIT_REPOSITORY https://github.com/openresty/luajit2.git
+    GIT_RESET 5d8d0a27bfa4595b24b8ed36123555fcd2bb2f8c
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

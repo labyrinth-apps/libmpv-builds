@@ -1,5 +1,6 @@
 ExternalProject_Add(c-ares
     GIT_REPOSITORY https://github.com/c-ares/c-ares.git
+    GIT_RESET 46266f4ae2d309ce52009d85fc6198b5f0db6225
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--depth=1 --filter=tree:0"
     GIT_TAG main

@@ -2,6 +2,7 @@ ExternalProject_Add(ngtcp2
     DEPENDS
         openssl
     GIT_REPOSITORY https://github.com/ngtcp2/ngtcp2.git
+    GIT_RESET e5c62f3e761459b3cd6f4ab1ce5655b79e93ba8b
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--depth=1 --sparse --filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !tests"

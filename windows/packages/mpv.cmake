@@ -1,33 +1,27 @@
+# LGPL-only libmpv (media_kit flavour: -Dgpl=false, no Lua/JS/OpenAL/VapourSynth/DVD/rubberband;
+# plus shinchiro's newer extras off). Version from -DMPV_REF (default v0.41.0).
+if(NOT DEFINED MPV_REF)
+    set(MPV_REF "v0.41.0")
+endif()
+
 ExternalProject_Add(mpv
     DEPENDS
         angle-headers
         ffmpeg
         fribidi
         lcms2
-        libarchive
         libass
-        libdvdnav
-        libdvdread
-        libiconv
         libjpeg
         libpng
-        luajit
-        rubberband
         uchardet
-        openal-soft
-        mujs
         vulkan
         shaderc
         libplacebo
         spirv-cross
-        vapoursynth
-        libsdl2
-        subrandr
-        libsixel
-        curl
     GIT_REPOSITORY https://github.com/mpv-player/mpv.git
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
+    GIT_RESET ${MPV_REF}
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${EXEC} CONF=1 meson setup <BINARY_DIR> <SOURCE_DIR>
         --prefix=${MINGW_INSTALL_PREFIX}
@@ -35,30 +29,31 @@ ExternalProject_Add(mpv
         --cross-file=${MESON_CROSS}
         --default-library=shared
         --prefer-static
-        -Ddebug=true
-        -Db_ndebug=true
+        -Dgpl=false
+        -Ddebug=false
+        -Db_ndebug=false
         -Doptimization=3
         -Db_lto=true
         ${mpv_lto_mode}
         -Dlibmpv=true
         -Dpdf-build=enabled
-        -Dlua=enabled
-        -Djavascript=enabled
-        -Dsdl2-gamepad=enabled
-        -Dlibarchive=enabled
-        -Dlibbluray=enabled
-        -Ddvdnav=enabled
+        -Dlua=disabled
+        -Djavascript=disabled
+        -Dsdl2-gamepad=disabled
+        -Dlibarchive=disabled
+        -Dlibbluray=disabled
+        -Ddvdnav=disabled
         -Duchardet=enabled
-        -Drubberband=enabled
+        -Drubberband=disabled
         -Dlcms2=enabled
-        -Dopenal=enabled
+        -Dopenal=disabled
         -Dspirv-cross=enabled
         -Dvulkan=enabled
-        -Dvapoursynth=enabled
-        -Dsubrandr=enabled
-        -Dsixel=enabled
+        -Dvapoursynth=disabled
+        -Dsubrandr=disabled
+        -Dsixel=disabled
         ${mpv_gl}
-        -Dlibcurl=enabled
+        -Dlibcurl=disabled
         -Dc_args='-Wno-error=int-conversion'
     BUILD_COMMAND ${EXEC} LTO_JOB=1 PDB=1 ninja -C <BINARY_DIR>
     INSTALL_COMMAND ""

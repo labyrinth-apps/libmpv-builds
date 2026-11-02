@@ -1,6 +1,7 @@
 ExternalProject_Add(libmysofa
     DEPENDS zlib
     GIT_REPOSITORY https://github.com/hoene/libmysofa.git
+    GIT_RESET 648eed03472e6720a1ea45d1a1f86c4efb569ff9
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_REMOTE_NAME origin
     GIT_TAG main

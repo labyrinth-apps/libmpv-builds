@@ -1,5 +1,6 @@
 ExternalProject_Add(glad
     GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+    GIT_RESET 0a7cf1af9e25e02821587bd4095807fc90b6426a
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

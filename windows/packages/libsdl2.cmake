@@ -3,6 +3,7 @@ ExternalProject_Add(libsdl2
         vulkan
         libiconv
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_RESET cee83f2d9a916e9de30c5712e798541fdc134b06
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--sparse --filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !test"

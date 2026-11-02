@@ -8,6 +8,7 @@ ExternalProject_Add(megasdk
         libuv
         libsodium
     GIT_REPOSITORY https://github.com/meganz/sdk.git
+    GIT_RESET 2c95a487b4b297dba1d792c88189d432c3452694
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

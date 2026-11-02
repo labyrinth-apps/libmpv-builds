@@ -1,6 +1,7 @@
 ExternalProject_Add(vulkan
     DEPENDS vulkan-header
     GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Loader.git
+    GIT_RESET aa6dee8385afe4b2cc0152d086af2184743e16fd
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

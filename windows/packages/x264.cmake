@@ -1,5 +1,6 @@
 ExternalProject_Add(x264
     GIT_REPOSITORY https://code.videolan.org/videolan/x264.git
+    GIT_RESET 0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

@@ -4,6 +4,7 @@ ExternalProject_Add(shaderc
         spirv-headers
         spirv-tools
     GIT_REPOSITORY https://github.com/google/shaderc.git
+    GIT_RESET 4f0683ab2419ecbb9e18c9edfd4ffd70c2ba8cc6
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_REMOTE_NAME origin
     GIT_TAG main

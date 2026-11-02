@@ -2,6 +2,7 @@ ExternalProject_Add(vorbis
     DEPENDS
         ogg
     GIT_REPOSITORY https://github.com/xiph/vorbis.git
+    GIT_RESET 1b75110b5a2754ba1931d82dd83cb822b266a21d
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

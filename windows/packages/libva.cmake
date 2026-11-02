@@ -1,5 +1,6 @@
 ExternalProject_Add(libva
     GIT_REPOSITORY https://github.com/intel/libva.git
+    GIT_RESET f052e984e0c8bf10784198cc311b23c567b1367f
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     PATCH_COMMAND ${EXEC} sed -i "s/shared_library/library/g" va/meson.build

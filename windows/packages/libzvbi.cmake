@@ -3,6 +3,7 @@ ExternalProject_Add(libzvbi
         libpng
         libiconv
     GIT_REPOSITORY https://github.com/zapping-vbi/zvbi.git
+    GIT_RESET 34bb6f660c5c1bacd4a66cc7b22311e4ca3c1ab5
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

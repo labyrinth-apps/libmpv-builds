@@ -1,5 +1,6 @@
 ExternalProject_Add(spirv-tools
     GIT_REPOSITORY https://github.com/KhronosGroup/SPIRV-Tools.git
+    GIT_RESET efadd8a7fa2a8dd26567694dfcb5d9b5f36d4ca4
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

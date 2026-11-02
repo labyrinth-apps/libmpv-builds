@@ -2,6 +2,7 @@ ExternalProject_Add(readline
     DEPENDS
         termcap
     GIT_REPOSITORY https://git.sailfishos.org/mirror/readline.git
+    GIT_RESET f95e81428a77b37d83e56c0c7099956e8a7adfc8
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

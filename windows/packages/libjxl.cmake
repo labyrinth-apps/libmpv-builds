@@ -8,6 +8,7 @@ ExternalProject_Add(libjxl
         brotli
         highway
     GIT_REPOSITORY https://github.com/libjxl/libjxl.git
+    GIT_RESET 7fc5576ab74dc3a07ae6ada2c02193aef99dab87
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

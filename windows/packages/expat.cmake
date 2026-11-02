@@ -1,5 +1,6 @@
 ExternalProject_Add(expat
     GIT_REPOSITORY https://github.com/libexpat/libexpat.git
+    GIT_RESET bc1a998627bda6cb3f0218021be16b4cc1d5c2e3
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--sparse --filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !testdata"

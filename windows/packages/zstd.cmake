@@ -1,5 +1,6 @@
 ExternalProject_Add(zstd
     GIT_REPOSITORY https://github.com/facebook/zstd.git
+    GIT_RESET 49cf51799ea051457f57243527aa2058f999f005
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

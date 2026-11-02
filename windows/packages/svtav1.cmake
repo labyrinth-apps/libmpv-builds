@@ -1,5 +1,6 @@
 ExternalProject_Add(svtav1
     GIT_REPOSITORY https://gitlab.com/AOMediaCodec/SVT-AV1.git
+    GIT_RESET e3d63405f9ba8219913a7276c2c47d10e5d022fe
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

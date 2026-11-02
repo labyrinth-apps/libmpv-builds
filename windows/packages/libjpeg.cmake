@@ -1,5 +1,6 @@
 ExternalProject_Add(libjpeg
     GIT_REPOSITORY https://github.com/libjpeg-turbo/libjpeg-turbo.git
+    GIT_RESET 9dd0b49901fa25ed0fa2b2d40f6bd6a41accc80d
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_REMOTE_NAME origin
     GIT_TAG main

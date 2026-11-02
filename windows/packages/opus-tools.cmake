@@ -6,6 +6,7 @@ ExternalProject_Add(opus-tools
         opusfile
         libopusenc
     GIT_REPOSITORY https://github.com/xiph/opus-tools.git
+    GIT_RESET 5f894e95a50b2004d8c8171082a5fd7327f93653
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

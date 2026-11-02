@@ -1,5 +1,6 @@
 ExternalProject_Add(highway
     GIT_REPOSITORY https://github.com/google/highway.git
+    GIT_RESET b49a7a64ee9146970726fb80900b771e3d0f4de6
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

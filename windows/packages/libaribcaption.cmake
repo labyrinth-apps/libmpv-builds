@@ -3,6 +3,7 @@ ExternalProject_Add(libaribcaption
         fontconfig
         freetype2
     GIT_REPOSITORY https://github.com/xqq/libaribcaption.git
+    GIT_RESET da5ae9b1479168c9560161a916e12e6159f116b4
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

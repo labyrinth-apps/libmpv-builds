@@ -1,5 +1,6 @@
 ExternalProject_Add(libsamplerate
     GIT_REPOSITORY https://github.com/libsndfile/libsamplerate.git
+    GIT_RESET 0844c208f683527c08ea8a80acc13b398aa9c8bf
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

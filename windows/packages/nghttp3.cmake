@@ -1,5 +1,6 @@
 ExternalProject_Add(nghttp3
     GIT_REPOSITORY https://github.com/ngtcp2/nghttp3.git
+    GIT_RESET 6d1dc6fec80e7a95d9b9c0a68d917ee705b03493
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--depth=1 --sparse --filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !tests"

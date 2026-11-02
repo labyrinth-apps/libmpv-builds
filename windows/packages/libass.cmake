@@ -7,6 +7,7 @@ ExternalProject_Add(libass
         fontconfig
         libunibreak
     GIT_REPOSITORY https://github.com/libass/libass.git
+    GIT_RESET 00fe2ec7ae677b7568fbbcbcbcb67d34bb4292a3
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

@@ -16,7 +16,7 @@ jobs:
   build_llvm:
     runs-on: ubuntu-latest
     container:
-      image: docker://ghcr.io/shinchiro/archlinux:latest
+      image: docker://ghcr.io/shinchiro/archlinux@sha256:56a74bc68139d108ee082f1d0a488295eaf5af2f1b79f0cbbb7caca1c4402bbd
     steps:
       - name: Setup git config
         working-directory: .

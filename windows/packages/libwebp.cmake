@@ -4,6 +4,7 @@ ExternalProject_Add(libwebp
         libpng
         libjpeg
     GIT_REPOSITORY https://chromium.googlesource.com/webm/libwebp.git
+    GIT_RESET 1844042d1ca751e62e61df7617dba19c98588339
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

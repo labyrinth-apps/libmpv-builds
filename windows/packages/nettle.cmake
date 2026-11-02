@@ -1,5 +1,6 @@
 ExternalProject_Add(nettle
     GIT_REPOSITORY https://gitlab.com/shinchiro/nettle.git
+    GIT_RESET efa1b6b311196f3e66984ce0f0ef84106fe6e273
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     PATCH_COMMAND ${EXEC} git am --3way ${CMAKE_CURRENT_SOURCE_DIR}/nettle-*.patch

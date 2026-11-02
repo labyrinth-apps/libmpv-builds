@@ -2,6 +2,7 @@ ExternalProject_Add(dav1d
     DEPENDS
         xxhash
     GIT_REPOSITORY https://code.videolan.org/videolan/dav1d.git
+    GIT_RESET 9143ecbe6d25e0f0c3fe95642525138fc1466500
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

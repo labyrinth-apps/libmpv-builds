@@ -11,6 +11,7 @@ ExternalProject_Add(curl
         zlib
         zstd
     GIT_REPOSITORY https://github.com/curl/curl.git
+    GIT_RESET f0da5390ad9d380807cc83e600196809df8bb96b
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !tests !docs"

@@ -4,6 +4,7 @@ ExternalProject_Add(subrandr
         harfbuzz
         fontconfig
     GIT_REPOSITORY https://github.com/afishhh/subrandr.git
+    GIT_RESET 31735a31f72794cabe3e09a84067b7d8c35464e5
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

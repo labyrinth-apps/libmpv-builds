@@ -3,6 +3,7 @@ ExternalProject_Add(opus
     DEPENDS
         opus-dnn
     GIT_REPOSITORY https://github.com/xiph/opus.git
+    GIT_RESET 677070ed0c35fc52a634f4be845aa426ea3a1689
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_REMOTE_NAME origin

@@ -4,6 +4,7 @@ endif()
 
 ExternalProject_Add(davs2
     GIT_REPOSITORY https://github.com/saindriches/davs2.git
+    GIT_RESET f50435051b72c168c2b566c544e27fcff71ba61a
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

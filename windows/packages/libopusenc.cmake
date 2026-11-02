@@ -2,6 +2,7 @@ ExternalProject_Add(libopusenc
     DEPENDS
         opus
     GIT_REPOSITORY https://github.com/xiph/libopusenc.git
+    GIT_RESET 3c65f440baff6220872ec11b0cbde37ef7a48f78
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

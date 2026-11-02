@@ -4,6 +4,7 @@ ExternalProject_Add(libbluray
         freetype2
         libxml2
     GIT_REPOSITORY https://code.videolan.org/videolan/libbluray.git
+    GIT_RESET f33a738fd7bb8b5e1148b0a5424778db7342450b
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_SUBMODULES ""

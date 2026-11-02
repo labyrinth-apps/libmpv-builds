@@ -1,5 +1,6 @@
 ExternalProject_Add(angle-headers
     GIT_REPOSITORY https://github.com/google/angle.git
+    GIT_RESET b84ea696f3e77b0a45ab948c11e767ac51f0830a
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_REMOTE_NAME origin
     GIT_TAG main

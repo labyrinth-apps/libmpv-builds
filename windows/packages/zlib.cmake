@@ -1,5 +1,6 @@
 ExternalProject_Add(zlib
     GIT_REPOSITORY https://github.com/zlib-ng/zlib-ng.git
+    GIT_RESET 9d1d1826c061da2c0dd6e4b5f402df942dabe738
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

@@ -3,6 +3,7 @@ ExternalProject_Add(libxml2
         zlib
         libiconv
     GIT_REPOSITORY https://github.com/GNOME/libxml2.git
+    GIT_RESET 2034036d2e8d5f1eac8302aa477ff563aa4670c6
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--sparse --filter=tree:0"
     GIT_CLONE_POST_COMMAND "sparse-checkout set --no-cone /* !result !test"

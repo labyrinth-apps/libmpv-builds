@@ -1,5 +1,6 @@
 ExternalProject_Add(libudfread
     GIT_REPOSITORY https://code.videolan.org/videolan/libudfread.git
+    GIT_RESET b0bc6957e7e07d5f35391f210596d9eb71cffdd9
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""

@@ -1,6 +1,7 @@
 ExternalProject_Add(flac
     DEPENDS ogg
     GIT_REPOSITORY https://github.com/xiph/flac.git
+    GIT_RESET 59fa3402cb19b6b7c85b916f138cfb03c7b27504
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     UPDATE_COMMAND ""
