@@ -45,25 +45,18 @@ pkgs.stdenvNoCC.mkDerivation {
       --native-file ${nativeFile} \
       --cross-file ${crossFile} \
       --prefix=$out \
-      -Dglib=disabled \
-      -Dgobject=disabled \
-      -Dcairo=disabled \
-      -Dchafa=disabled \
-      -Dicu=disabled \
-      -Dgraphite=disabled \
-      -Dgraphite2=disabled \
-      -Dfreetype=disabled \
-      -Dgdi=disabled \
-      -Ddirectwrite=disabled \
+      -Dauto_features=disabled \
       -Dcoretext=enabled \
+      `# harfbuzz >= 11 also builds raster/vector/gpu/subset libs: off` \
+      -Draster=disabled \
+      -Dvector=disabled \
+      -Dgpu=disabled \
+      -Dsubset=disabled \
+      -Dutilities=disabled \
       -Dtests=disabled \
-      -Dintrospection=disabled \
-      -Ddocs=disabled \
-      -Dbenchmark=disabled \
       -Dicu_builtin=false \
       -Dexperimental_api=false \
-      -Dragel_subproject=false \
-      -Dfuzzer_ldflags=
+      -Dragel_subproject=false
   '';
   buildPhase = ''
     meson compile -vC build

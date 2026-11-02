@@ -59,7 +59,8 @@ pkgs.stdenvNoCC.mkDerivation {
     meson setup build $src \
       --native-file ${nativeFile} \
       --cross-file ${crossFile} \
-      --prefix=$out
+      --prefix=$out \
+      -Dtests=false
   '';
   buildPhase = ''
     meson compile -vC build

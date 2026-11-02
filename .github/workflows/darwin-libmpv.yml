@@ -1,0 +1,202 @@
+# Builds LGPL-only libmpv xcframeworks for iOS (device + simulator) and macOS
+# (arm64 + x86_64) from darwin/ (Nix + Meson, derived from
+# media-kit/libmpv-darwin-build), gates the licence, smoke-tests the macOS
+# build and (on request) publishes a release.
+name: darwin libmpv
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish a GitHub release (only if build, licence gate and smoke tests passed)'
+        type: boolean
+        default: false
+      target:
+        description: 'Debug only: build this single flake attr instead of the xcframeworks (skips packaging/smoke)'
+        type: string
+        default: ''
+
+env:
+  XCODE_APP: /Applications/Xcode_16.4.app
+  MPV_VERSION: 0.41.0
+  FFMPEG_VERSION: 8.1.3
+
+jobs:
+  meta:
+    name: Meta
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - id: tag
+        run: echo "tag=darwin-$(date -u +%Y%m%d)-mpv${MPV_VERSION}-ff${FFMPEG_VERSION}" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build (${{ matrix.os }}-universal-video-default)
+    needs: meta
+    # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
+    runs-on: macos-15
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ios
+            archs: ios-arm64 iossimulator-arm64 iossimulator-amd64
+          - os: macos
+            archs: macos-arm64 macos-amd64
+    defaults:
+      run:
+        working-directory: darwin
+    env:
+      TAG: ${{ needs.meta.outputs.tag }}
+      TARGET: mk-out-archive-xcframeworks-${{ matrix.os }}-universal-video-default
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Licence gate self-test (fake GPL configs must fail)
+        run: scripts/test_licence_gate.sh
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+        with:
+          extra-conf: |
+            sandbox = true
+            sandbox-fallback = false
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+        with:
+          use-flakehub: false
+
+      # See darwin/nix/overlays/xcode.nix. Written without the Makefile's
+      # restore trap so later nix calls evaluate the same derivations.
+      - name: Configure Xcode + version
+        run: |
+          XCODE_PATH=$(realpath "$XCODE_APP")
+          "$XCODE_PATH/Contents/Developer/usr/bin/xcodebuild" -version
+          echo "$XCODE_PATH" > .nix/config/xcode.path
+          echo "$TAG" > .nix/config/version.txt
+          echo "NIX_BUILD=nix build -L --keep-going --option sandbox true --option sandbox-fallback false --option extra-sandbox-paths $XCODE_PATH" >> "$GITHUB_ENV"
+
+      - name: Build
+        env:
+          DEBUG_TARGET: ${{ inputs.target }}
+        run: |
+          $NIX_BUILD ".#${DEBUG_TARGET:-$TARGET}"
+          ls -la result/
+
+      - name: Licence gate
+        if: ${{ inputs.target == '' }}
+        run: |
+          attrs=()
+          for a in ${{ matrix.archs }}; do
+            attrs+=(".#mk-pkg-ffmpeg-$a-video-default" ".#mk-pkg-mpv-$a-video")
+          done
+          outs=$($NIX_BUILD --no-link --print-out-paths "${attrs[@]}")
+          echo "$outs"
+          scripts/licence_gate.sh $outs
+          for o in $outs; do
+            [ -f "$o/share/mpv/configure.log" ] && grep -iE "Detected macOS SDK|libplacebo|gl-cocoa|ios-gl|videotoolbox|audiounit|coreaudio" "$o/share/mpv/configure.log" | head -40 || true
+          done
+
+      - name: Verify xcframeworks (names, archs, minos, load commands)
+        if: ${{ inputs.target == '' }}
+        run: |
+          mkdir -p ../dist-tmp
+          cp result/*.zip ../dist-tmp/
+          scripts/verify_xcframeworks.sh ../dist-tmp ${{ matrix.os }}
+
+      - name: Package (zips, checksums, Package.swift snippet)
+        if: ${{ inputs.target == '' }}
+        run: scripts/package_release.sh result ${{ matrix.os }} "$TAG" "${{ github.repository }}" ../dist
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.target == '' }}
+        with:
+          name: darwin-${{ matrix.os }}
+          path: dist/*
+          if-no-files-found: error
+
+  smoke:
+    name: Smoke (macOS, our build)
+    needs: build
+    if: ${{ inputs.target == '' }}
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      # Not /usr/bin/python3: SIP strips DYLD_* for protected binaries.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: darwin-macos
+          path: dist
+      - name: Stage frameworks
+        run: darwin/scripts/stage_macos_frameworks.sh dist fw
+      - name: Run smoke test
+        run: |
+          DYLD_FRAMEWORK_PATH="$PWD/fw" python windows/smoke/smoke.py fw/Mpv.framework/Mpv \
+            --expect-mpv "v${MPV_VERSION}" --expect-ffmpeg "${FFMPEG_VERSION}"
+      - name: HTTPS certificate verification (diagnostic, never fails)
+        continue-on-error: true
+        run: |
+          DYLD_FRAMEWORK_PATH="$PWD/fw" python darwin/smoke/tls_check.py fw/Mpv.framework/Mpv || true
+          DYLD_FRAMEWORK_PATH="$PWD/fw" python darwin/smoke/tls_check.py fw/Mpv.framework/Mpv --ca-file /etc/ssl/cert.pem || true
+
+  smoke-control:
+    name: Smoke control (upstream v0.7.2 must fail the seek check)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download upstream libmpv-darwin-build v0.7.2 (macOS)
+        run: |
+          mkdir up
+          base=https://github.com/media-kit/libmpv-darwin-build/releases/download/v0.7.2/libmpv-xcframeworks_v0.7.2_macos-universal-video-default
+          for fw in Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mbedcrypto Mbedtls Mbedx509 Mpv Png16 Swresample Swscale Uchardet Xml2; do
+            curl -sSfL -o "up/$fw.zip" "${base}_$fw.zip"
+          done
+          darwin/scripts/stage_macos_frameworks.sh up fw
+      - name: Upstream build fails the fMP4 seek check
+        run: |
+          set +e
+          DYLD_FRAMEWORK_PATH="$PWD/fw" python windows/smoke/smoke.py fw/Mpv.framework/Mpv 2>&1 | tee control.log
+          set -e
+          # Must get past the HTTPS/open checks and fail exactly on the seek.
+          if grep -q "^PASS HTTPS fMP4 HLS opens" control.log && grep -q "^FAIL fMP4 seek lands near the target" control.log; then
+            echo "Control failed the seek check as expected"
+          else
+            echo "Control did not fail the way it should: the smoke test may no longer catch the FFmpeg 6 seek bug" >&2
+            exit 1
+          fi
+
+  release:
+    name: Release
+    if: ${{ inputs.release && inputs.target == '' }}
+    needs: [meta, build, smoke, smoke-control]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.meta.outputs.tag }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: darwin-*
+          path: dist
+          merge-multiple: true
+      - name: Publish
+        run: |
+          cd dist
+          cat checksums-ios.txt checksums-macos.txt > checksums.txt
+          rm checksums-ios.txt checksums-macos.txt
+          ls -la
+          gh release create "$TAG" ./* -R "${{ github.repository }}" \
+            --title "$TAG" \
+            --notes "LGPL-only libmpv xcframeworks for iOS 16.0+ (arm64 device; arm64 + x86_64 simulator) and macOS 13.5+ (arm64 + x86_64): mpv v${MPV_VERSION}, FFmpeg ${FFMPEG_VERSION} (video-default flavour). FFmpeg configured with --disable-gpl --disable-nonfree --enable-version3; mpv -Dgpl=false; licence gate passed. Sources and patches: darwin/ at ${{ github.sha }} (pinned in darwin/packages.lock.nix). SwiftPM checksums in checksums.txt; Package-{ios,macos}.swift.snippet are generated from them."

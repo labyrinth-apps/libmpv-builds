@@ -47,7 +47,9 @@ common_options = [
     '--enable-pthreads',
     '--enable-pic',
     '--enable-mbedtls', # tls support (mbedtls)
-    '--enable-version3',
+    '--enable-version3', # LGPLv3 (mbedtls is Apache-2.0)
+    '--disable-gpl', # LGPL only: never link GPL code into the app
+    '--disable-nonfree',
     '--enable-safe-bitstream-reader',
     '--enable-stripping',
     '--enable-avcodec',
@@ -56,8 +58,6 @@ common_options = [
     '--enable-swscale',
     '--enable-avfilter',
 
-    # '--enable-gpl', # uncomment it to include GPL code
-    # '--enable-nonfree', # uncomment it to include unredistributable code
 ]
 
 audio_common_options = [
@@ -242,6 +242,10 @@ video_default_options = [
     '--enable-demuxer=matroska',
     '--enable-demuxer=dash', # --enable-libxml2 required
     '--enable-demuxer=webm_dash_manifest',
+    # probed by ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch
+    '--enable-demuxer=png_pipe',
+    '--enable-demuxer=gif',
+    '--enable-demuxer=gif_pipe',
 
     '--enable-demuxer=ass',
     '--enable-demuxer=srt',
@@ -261,43 +265,6 @@ video_default_options = [
     '--enable-hwaccel=vp9_videotoolbox',
 ]
 
-audio_full_options = [
-    '--enable-decoders',
-    '--enable-hwaccels',
-    '--enable-parsers',
-    '--enable-demuxers',
-    '--enable-protocols',
-    '--enable-bsfs',
-
-    # filters
-    '--enable-filter=overlay',
-    '--enable-filter=equalizer',
-
-    # TODO: `media_kit` checks the presence of the h264 decoder to determine if
-    # `ffmpeg` is an audio or video variant, so we disable it for the audio
-    # variant.
-    # Ideally, we should only enable the audio decoders…
-    '--disable-decoder=h264',
-]
-
-video_full_options = [
-    '--enable-decoder=h264',
-]
-
-audio_encodersgpl_options = [
-    '--enable-encoders',
-    '--enable-muxers',
-    '--enable-filters',
-    '--enable-libvorbis',
-    # TODO: If audio_encoders is going to exist as its own package, be smarter about what encoders to include
-]
-
-video_encodersgpl_options = [
-    '--enable-libvpx',
-    '--enable-libx264',
-    '--enable-gpl'
-]
-
 # disable all option
 options = disable_all_options
 
@@ -313,18 +280,6 @@ if flavor == 'default'
     options += audio_default_options
     if variant == 'video'
         options += video_default_options
-    endif
-elif flavor == 'full'
-    options += audio_full_options
-    if variant == 'video'
-        options += video_full_options
-    endif
-elif flavor == 'encodersgpl'
-    options += audio_full_options
-    options += audio_encodersgpl_options
-    if variant == 'video'
-        options += video_full_options
-        options += video_encodersgpl_options
     endif
 endif
 

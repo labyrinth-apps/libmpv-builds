@@ -1,4 +1,4 @@
+# Only the "video" variant is built.
 {
-  audio = "audio";
   video = "video";
 }
