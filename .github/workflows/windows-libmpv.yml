@@ -113,6 +113,8 @@ jobs:
     name: Smoke (${{ matrix.variant }})
     needs: build
     runs-on: windows-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -125,6 +127,8 @@ jobs:
             expect_ffmpeg: 9.0.2
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
           name: mpv-dev-${{ matrix.variant }}
@@ -137,11 +141,17 @@ jobs:
   smoke-control:
     name: Smoke control (upstream 20241021 must fail the seek check)
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Upstream DLL fails the fMP4 seek check
         run: |
-          curl -sL -o up.7z https://github.com/media-kit/libmpv-win32-video-cmake/releases/download/20241021/mpv-dev-x86_64-20241021-git-0f78584.7z
+          curl -sSfL -o up.7z https://github.com/media-kit/libmpv-win32-video-cmake/releases/download/20241021/mpv-dev-x86_64-20241021-git-0f78584.7z
+          # MD5 published in media_kit_libs_windows_video's CMakeLists (c533e44675)
+          echo "6ecf18e85b093c3f7edb16f3ee6603f3  up.7z" | md5sum -c -
           mkdir up && cd up && 7z x -y ../up.7z > /dev/null && cd ..
           if python windows/smoke/smoke.py up/libmpv-2.dll; then
             echo "Control unexpectedly passed: the smoke test no longer catches the FFmpeg 7.1 seek bug" >&2
