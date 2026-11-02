@@ -8,7 +8,9 @@ Checks the cases the app depends on and exits non-zero on the first failure:
   target (FFmpeg <= 7.1 runs to EOF instead);
 - MPEG-TS HLS (anime-like) plays;
 - TS segments disguised with a PNG header (anime downloads) decode;
-- an .ass subtitle loads.
+- an .ass subtitle loads;
+- with --extended: TrueHD/MLP and VC-1 decoders exist and the bwdif deinterlacer
+  can be inserted (PGS/EIA-608 are checked at build time: scripts/features_gate.sh).
 """
 import argparse, ctypes, json, os, struct, sys, tempfile, time, urllib.request, zlib
 
@@ -96,6 +98,8 @@ def main():
     ap.add_argument("dll")
     ap.add_argument("--expect-mpv")
     ap.add_argument("--expect-ffmpeg")
+    ap.add_argument("--extended", action="store_true",
+                    help="also require the decoders/filters added beyond media_kit's set")
     a = ap.parse_args()
     lib = load(a.dll)
 
@@ -109,6 +113,11 @@ def main():
     if a.expect_ffmpeg:
         check(a.expect_ffmpeg in (fv or ""), f"FFmpeg version contains {a.expect_ffmpeg}")
     check(wait(lambda: (fnum(p.get("time-pos")) or 0) > 1.0, 60), "MPEG-TS HLS plays (mux)")
+    if a.extended:
+        decoders = {d.get("codec") for d in json.loads(p.get("decoder-list") or "[]")}
+        for want in ["truehd", "mlp", "vc1"]:  # subtitle decoders aren't listed here
+            check(want in decoders, f"decoder available: {want}")
+        check(p.cmd("vf add bwdif") >= 0, "bwdif deinterlacer can be inserted (lavfi)")
     p.close()
 
     p = Mpv(lib)

@@ -82,6 +82,9 @@ jobs:
       - name: Licence gate
         run: scripts/licence_gate.sh build_x86_64/packages
 
+      - name: Features gate (decoders/filters beyond media_kit's set)
+        run: scripts/features_gate.sh build_x86_64/packages
+
       - name: Package
         run: |
           mkdir -p release
@@ -136,7 +139,7 @@ jobs:
       - name: Run smoke test
         run: |
           cd dist && 7z x -y mpv-dev-*.7z > /dev/null && cd ..
-          python windows/smoke/smoke.py dist/libmpv-2.dll --expect-mpv "${{ matrix.expect_mpv }}" --expect-ffmpeg "${{ matrix.expect_ffmpeg }}"
+          python windows/smoke/smoke.py dist/libmpv-2.dll --expect-mpv "${{ matrix.expect_mpv }}" --expect-ffmpeg "${{ matrix.expect_ffmpeg }}" --extended
 
   smoke-control:
     name: Smoke control (upstream 20241021 must fail the seek check)

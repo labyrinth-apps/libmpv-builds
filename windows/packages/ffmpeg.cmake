@@ -115,6 +115,7 @@ ExternalProject_Add(ffmpeg
         --enable-decoder=msmpeg*
         --enable-decoder=mjpeg*
         --enable-decoder=wmv*
+        --enable-decoder=vc1*
 
         --enable-decoder=aac*
         --enable-decoder=ac3
@@ -141,6 +142,8 @@ ExternalProject_Add(ffmpeg
         --enable-decoder=pcm*
         --enable-decoder=dsd*
         --enable-decoder=dca
+        --enable-decoder=truehd
+        --enable-decoder=mlp
 
         --enable-decoder=ssa
         --enable-decoder=ass
@@ -155,6 +158,8 @@ ExternalProject_Add(ffmpeg
         --enable-decoder=vplayer
         --enable-decoder=webvtt
         --enable-decoder=movtext
+        --enable-decoder=hdmv_pgs_subtitle
+        --enable-decoder=cc_dec
 
         --enable-decoder=mjpeg
         --enable-decoder=ljpeg
@@ -216,6 +221,8 @@ ExternalProject_Add(ffmpeg
         --enable-demuxer=truehd
         --enable-demuxer=dts
         --enable-demuxer=dtshd
+        --enable-demuxer=mlp
+        --enable-demuxer=vc1
 
         --enable-demuxer=ass
         --enable-demuxer=srt
@@ -241,9 +248,22 @@ ExternalProject_Add(ffmpeg
         --enable-parser=tak
         --enable-parser=vorbis
         --enable-parser=dca
+        --enable-parser=mlp
+        --enable-parser=vc1
 
         --enable-filter=overlay
         --enable-filter=equalizer
+        # Deinterlacing for 1080i live TV (mpv inserts these through lavfi)
+        --enable-filter=bwdif
+        --enable-filter=yadif
+        --enable-filter=buffer
+        --enable-filter=buffersink
+        --enable-filter=abuffer
+        --enable-filter=abuffersink
+        --enable-filter=format
+        --enable-filter=aformat
+        --enable-filter=null
+        --enable-filter=anull
 
         --enable-protocol=async
         --enable-protocol=cache
