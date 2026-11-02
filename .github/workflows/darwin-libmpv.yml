@@ -19,6 +19,9 @@ on:
         type: string
         default: ''
 
+permissions:
+  contents: read
+
 env:
   XCODE_APP: /Applications/Xcode_16.4.app
   MPV_VERSION: 0.41.0
@@ -56,6 +59,8 @@ jobs:
       TARGET: mk-out-archive-xcframeworks-${{ matrix.os }}-universal-video-default
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Licence gate self-test (fake GPL configs must fail)
         run: scripts/test_licence_gate.sh
@@ -124,8 +129,12 @@ jobs:
     needs: build
     if: ${{ inputs.target == '' }}
     runs-on: macos-15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       # Not /usr/bin/python3: SIP strips DYLD_* for protected binaries.
       - uses: actions/setup-python@v5
         with:
@@ -149,8 +158,12 @@ jobs:
   smoke-control:
     name: Smoke control (upstream v0.7.2 must fail the seek check)
     runs-on: macos-15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -161,6 +174,9 @@ jobs:
           for fw in Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mbedcrypto Mbedtls Mbedx509 Mpv Png16 Swresample Swscale Uchardet Xml2; do
             curl -sSfL -o "up/$fw.zip" "${base}_$fw.zip"
           done
+          # Verify against media_kit's published SwiftPM checksums before unzipping
+          (cd up && grep -v '^#' ../darwin/smoke/upstream-v0.7.2-macos.sha256 | shasum -a 256 -c -)
+          [ "$(grep -vc '^#' darwin/smoke/upstream-v0.7.2-macos.sha256)" = 18 ]
           darwin/scripts/stage_macos_frameworks.sh up fw
       - name: Upstream build fails the fMP4 seek check
         run: |
