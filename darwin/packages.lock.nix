@@ -38,6 +38,13 @@
     url = "https://github.com/harfbuzz/harfbuzz/releases/download/14.6.0/harfbuzz-14.6.0.tar.xz";
     sha256 = "d07a007327277708a2a73ae437887cdbaf282937f6d03ca5467723e9099af586";
   };
+  vulkan-headers = {
+    # libplacebo v7.360.1 3rdparty/Vulkan-Headers submodule commit (headers only:
+    # libplacebo's public vulkan.h is compiled even with vulkan disabled)
+    version = "450bd223";
+    url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/450bd2232225d6c7728a4108055ac2e37cef6475.tar.gz";
+    sha256 = "26df9841c30806a994e2fdf42f7c87bcb1ced9db9a06033469123939fb3fa075";
+  };
   libass = {
     version = "0.17.5";
     url = "https://github.com/libass/libass/releases/download/0.17.5/libass-0.17.5.tar.xz";

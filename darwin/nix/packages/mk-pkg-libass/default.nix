@@ -54,6 +54,9 @@ pkgs.stdenvNoCC.mkDerivation {
     freetype
   ];
   configurePhase = ''
+    # autoconf finds no ar/ranlib on PATH in the sandbox ("false cr ...")
+    export AR=${pkgs.darwin.xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar
+    export RANLIB=${pkgs.darwin.xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib
     meson setup build $src \
       --native-file ${nativeFile} \
       --cross-file ${crossFile} \

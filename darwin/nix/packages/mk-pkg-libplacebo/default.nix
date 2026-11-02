@@ -42,10 +42,15 @@ let
     name = "${pname}-fast-float-source-${locks.fast_float.version}";
     inherit (locks.fast_float) url sha256;
   };
+  vulkanHeaders = callPackage ../../utils/fetch-tarball/default.nix {
+    name = "${pname}-vulkan-headers-source-${locks.vulkan-headers.version}";
+    inherit (locks.vulkan-headers) url sha256;
+  };
   patchedSource = pkgs.runCommand "${pname}-patched-source-${version}" { } ''
     cp -r ${src} src
     chmod -R 777 src
-    rm -rf src/3rdparty/glad src/3rdparty/fast_float
+    rm -rf src/3rdparty/glad src/3rdparty/fast_float src/3rdparty/Vulkan-Headers
+    cp -r ${vulkanHeaders} src/3rdparty/Vulkan-Headers
     cp -r ${glad} src/3rdparty/glad
     cp -r ${fastFloat} src/3rdparty/fast_float
     cp -r src $out
