@@ -51,6 +51,7 @@ let
     patch -p1 <${../../../patches/mpv-fix-apple-framework-links.patch}
     patch -p1 <${../../../patches/mpv-fix-mac-client-without-swift.patch}
     patch -p1 <${../../../patches/mpv-audiounit-shared-session.patch}
+    patch -p1 <${../../../patches/mpv-fix-coreaudio-macos27.patch}
     cd -
 
     cp -r $src $out
