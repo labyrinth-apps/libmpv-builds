@@ -90,3 +90,6 @@ as `darwin/packages.lock.nix`):
   checks HTTPS fMP4 HLS open + `seek 30 absolute` landing in 30.3–36 s, Mux TS HLS plays, PNG-prefixed
   TS segments decode (and the patch logs that it detected them), the added decoders exist and `vf add bwdif` works. The same binary against
   upstream v1.1.7's x86_64 jar (MD5-verified) must fail the seek check.
+- TLS: `patches/ffmpeg/ffmpeg-mbedtls-android-system-cas.patch` makes mbedtls verify against Android's
+  system store (Conscrypt APEX on 14+, else `/system/etc/security/cacerts`) when no `ca_file` is given,
+  loaded once per process. Gate: `smoke --tls --untrusted-url` on the emulator.

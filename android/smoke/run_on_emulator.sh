@@ -14,10 +14,19 @@ adb push "$w/ours/libmpv.so" $d/ours/ >/dev/null
 adb push "$w/control/libmpv.so" $d/control/ >/dev/null
 adb push "$w/png/." $d/png/ >/dev/null
 adb shell chmod 755 $d/smoke
+
+# Untrusted-certificate HTTPS server on the host (the emulator reaches it at 10.0.2.2).
+python3 -c '
+import http.server, ssl, sys
+srv = http.server.ThreadingHTTPServer(("0.0.0.0", 8443), http.server.SimpleHTTPRequestHandler)
+ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER); ctx.load_cert_chain(sys.argv[1])
+srv.socket = ctx.wrap_socket(srv.socket, server_side=True); srv.serve_forever()
+' "$(dirname "$0")/../../windows/smoke/selfsigned-untrusted.pem" > "$w/untrusted-server.log" 2>&1 &
+trap 'kill %1 2>/dev/null || true' EXIT
 adb shell ls -la $d $d/png
 
 echo "::group::our build"
-adb shell "cd $d && ./smoke ./ours/libmpv.so $d/png/p.m3u8 --expect-mpv v$mpv_v --expect-ffmpeg $ff_v --extended; echo SMOKE_EXIT=\$?" 2>&1 | tee "$w/ours.log"
+adb shell "cd $d && ./smoke ./ours/libmpv.so $d/png/p.m3u8 --expect-mpv v$mpv_v --expect-ffmpeg $ff_v --extended --tls --untrusted-url https://10.0.2.2:8443/; echo SMOKE_EXIT=\$?" 2>&1 | tee "$w/ours.log"
 echo "::endgroup::"
 echo "::group::control (upstream v1.1.7)"
 adb shell "cd $d && ./smoke ./control/libmpv.so $d/png/p.m3u8; echo SMOKE_EXIT=\$?" 2>&1 | tee "$w/control.log"

@@ -35,7 +35,6 @@ if arch != archs.universal then
 
     mpv = callPackage ../mk-pkg-mpv/default.nix { };
     ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
-    mbedtls = callPackage ../mk-pkg-mbedtls/default.nix { };
     dav1d = callPackage ../mk-pkg-dav1d/default.nix { };
     libxml2 = callPackage ../mk-pkg-libxml2/default.nix { };
     uchardet = callPackage ../mk-pkg-uchardet/default.nix { };
@@ -49,7 +48,6 @@ if arch != archs.universal then
     deps = [
       mpv
       ffmpeg
-      mbedtls
     ]
     ++ pkgs.lib.optionals (variant == variants.video) [
       dav1d

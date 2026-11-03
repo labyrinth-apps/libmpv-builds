@@ -46,8 +46,8 @@ common_options = [
     '--enable-network',
     '--enable-pthreads',
     '--enable-pic',
-    '--enable-mbedtls', # tls support (mbedtls)
-    '--enable-version3', # LGPLv3 (mbedtls is Apache-2.0)
+    '--enable-securetransport', # TLS via Apple, verified against the system trust store
+    '--enable-version3', # LGPLv3
     '--disable-gpl', # LGPL only: never link GPL code into the app
     '--disable-nonfree',
     '--enable-safe-bitstream-reader',

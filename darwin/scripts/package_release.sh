@@ -5,7 +5,7 @@
 set -euo pipefail
 src=$1 os=$2 tag=$3 repo=$4 out=$5
 prefix="libmpv-xcframeworks_${tag}_${os}-universal-video-default"
-expected=(Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mbedcrypto Mbedtls Mbedx509 Mpv Png16 Swresample Swscale Uchardet Xml2)
+expected=(Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mpv Png16 Swresample Swscale Uchardet Xml2)
 
 mkdir -p "$out"
 found=$(cd "$src" && ls ${prefix}_*.zip | sed "s/^${prefix}_//; s/\.zip$//" | sort | tr '\n' ' ')

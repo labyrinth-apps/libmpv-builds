@@ -8,7 +8,6 @@ ExternalProject_Add(ffmpeg
     DEPENDS
         amf-headers
         nvcodec-headers
-        openssl
         dav1d
         libxml2
         libvpl
@@ -74,7 +73,8 @@ ExternalProject_Add(ffmpeg
         --enable-optimizations
         --enable-runtime-cpudetect
 
-        --enable-openssl
+        # TLS via Windows (Schannel), verified against the system trust store
+        --enable-schannel
 
         --enable-libdav1d
 

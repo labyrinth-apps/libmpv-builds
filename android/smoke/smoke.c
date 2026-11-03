@@ -35,9 +35,13 @@ static void *sym(void *lib, const char *n)
     return p;
 }
 
+static bool tls_verify; // --tls: what the app sets on our builds
+
 static void open_player(void)
 {
     h = mpv_create();
+    if (tls_verify)
+        mpv_set_option_string(h, "tls-verify", "yes");
     mpv_set_option_string(h, "vo", "null");
     mpv_set_option_string(h, "ao", "null");
     mpv_set_option_string(h, "hr-seek", "yes");
@@ -108,10 +112,10 @@ int main(int argc, char **argv)
 {
     if (argc < 3) {
         fprintf(stderr, "usage: smoke <libmpv.so> <png-playlist.m3u8> [--expect-mpv X] "
-                        "[--expect-ffmpeg Y] [--extended]\n");
+                        "[--expect-ffmpeg Y] [--extended] [--tls] [--untrusted-url U]\n");
         return 2;
     }
-    const char *expect_mpv = NULL, *expect_ff = NULL;
+    const char *expect_mpv = NULL, *expect_ff = NULL, *untrusted = NULL;
     bool extended = false;
     for (int i = 3; i < argc; i++) {
         if (!strcmp(argv[i], "--expect-mpv") && i + 1 < argc)
@@ -120,6 +124,10 @@ int main(int argc, char **argv)
             expect_ff = argv[++i];
         else if (!strcmp(argv[i], "--extended"))
             extended = true;
+        else if (!strcmp(argv[i], "--tls"))
+            tls_verify = true;
+        else if (!strcmp(argv[i], "--untrusted-url") && i + 1 < argc)
+            untrusted = argv[++i];
     }
 
     void *lib = dlopen(argv[1], RTLD_NOW);
@@ -137,6 +145,17 @@ int main(int argc, char **argv)
     check(dlsym(lib, "mpv_lavc_set_java_vm") != NULL, "mpv_lavc_set_java_vm exported");
 
     char cmd[4096];
+
+    if (untrusted) {
+        // rawaudio accepts any bytes: "opened" means the TLS handshake succeeded.
+        open_player();
+        mpv_set_option_string(h, "demuxer", "rawaudio");
+        snprintf(cmd, sizeof(cmd), "loadfile \"%s\"", untrusted);
+        mpv_command_string(h, cmd);
+        bool opened = WAIT(has("file-format", "rawaudio"), 15);
+        close_player();
+        check(!opened, "TLS: untrusted certificate rejected");
+    }
 
     open_player();
     mpv_command_string(h, "loadfile \"" MUX "\"");

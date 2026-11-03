@@ -27,13 +27,21 @@ def mpv_path(p):
     return p.replace("\\", "/")
 
 
+# --tls: what the app sets on our builds (certificate checks on).
+EXTRA_OPTS = []
+GOOD_CERT = SHAKA
+# Self-signed for another hostname (test fixture, valid until 2126).
+BAD_PEM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "selfsigned-untrusted.pem")
+
+
 class Mpv:
-    def __init__(self, lib):
+    def __init__(self, lib, extra=()):
         self.m = lib
         self.h = lib.mpv_create()
         for k, v in [("vo", "null"), ("ao", "null"), ("hr-seek", "yes"),
                      ("demuxer-lavf-o", "allowed_extensions=ALL"),
-                     ("log-file", mpv_path(LOG)), ("msg-level", "all=v")]:
+                     ("log-file", mpv_path(LOG)), ("msg-level", "all=v"),
+                     *EXTRA_OPTS, *extra]:
             lib.mpv_set_option_string(self.h, k.encode(), v.encode())
         lib.mpv_initialize(self.h)
 
@@ -107,6 +115,64 @@ def png_prefixed_playlist(tmp):
     return p
 
 
+def opens_raw(lib, url):
+    """True if the TLS connection succeeded (rawaudio accepts any bytes)."""
+    p = Mpv(lib, [("demuxer", "rawaudio")])
+    p.cmd(f'loadfile "{url}"')
+    ok = wait(lambda: p.get("file-format") == "rawaudio", 20)
+    p.close()
+    return ok
+
+
+class _Server:
+    """Local HTTP or HTTPS (untrusted cert) server; records request paths."""
+
+    def __init__(self, directory, tls=False):
+        import functools, http.server, ssl, threading
+        self.paths = []
+        outer = self
+
+        class H(http.server.SimpleHTTPRequestHandler):
+            def log_message(self, *a):
+                outer.paths.append(self.path)
+
+        self.srv = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(H, directory=directory))
+        if tls:
+            ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ctx.load_cert_chain(BAD_PEM)
+            self.srv.socket = ctx.wrap_socket(self.srv.socket, server_side=True)
+        self.url = f"{'https' if tls else 'http'}://127.0.0.1:{self.srv.server_port}"
+        threading.Thread(target=self.srv.serve_forever, daemon=True).start()
+
+    def close(self):
+        self.srv.shutdown()
+
+
+def tls_checks(lib):
+    check(opens_raw(lib, GOOD_CERT), "TLS: valid certificate accepted")
+    with tempfile.TemporaryDirectory() as tmp:
+        with open(os.path.join(tmp, "seg.ts"), "wb") as f:
+            f.write(urllib.request.urlopen(MUX_SEG, timeout=60).read())
+        bad = _Server(tmp, tls=True)
+        check(not opens_raw(lib, f"{bad.url}/seg.ts") and not bad.paths,
+              "TLS: untrusted certificate rejected")
+        # HLS segments get FFmpeg's default, not mpv's tls-verify: must still
+        # verify. The playlist comes over plain HTTP (file:// can't fetch https).
+        with open(os.path.join(tmp, "p.m3u8"), "w") as f:
+            f.write("#EXTM3U\n#EXT-X-TARGETDURATION:12\n#EXT-X-PLAYLIST-TYPE:VOD\n"
+                    f"#EXTINF:10.0,\n{bad.url}/seg.ts\n#EXT-X-ENDLIST\n")
+        plain = _Server(tmp)
+        p = Mpv(lib)
+        p.cmd(f'loadfile "{plain.url}/p.m3u8"')
+        played = wait(lambda: (fnum(p.get("time-pos")) or 0) > 1.0, 15)
+        p.close()
+        plain.close()
+        bad.close()
+        check(not played and "/seg.ts" not in bad.paths,
+              "TLS: HLS segment behind an untrusted certificate is rejected")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("dll")
@@ -114,8 +180,13 @@ def main():
     ap.add_argument("--expect-ffmpeg")
     ap.add_argument("--extended", action="store_true",
                     help="also require the decoders/filters added beyond media_kit's set")
+    ap.add_argument("--tls", action="store_true",
+                    help="run with tls-verify=yes and require bad certificates to be rejected")
     a = ap.parse_args()
     lib = load(a.dll)
+    if a.tls:
+        EXTRA_OPTS.append(("tls-verify", "yes"))
+        tls_checks(lib)
 
     p = Mpv(lib)
     p.cmd(f'loadfile "{MUX}"')

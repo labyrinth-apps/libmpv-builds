@@ -23,7 +23,6 @@ let
   };
   nativeFile = callPackage ../../utils/native-file/default.nix { };
   crossFile = callPackage ../../utils/cross-file/default.nix { };
-  mbedtls = callPackage ../mk-pkg-mbedtls/default.nix { };
   dav1d = callPackage ../mk-pkg-dav1d/default.nix { };
   libxml2 = callPackage ../mk-pkg-libxml2/default.nix { };
 
@@ -62,7 +61,6 @@ pkgs.stdenvNoCC.mkDerivation {
     pkgs.pkg-config
   ];
   buildInputs = [
-    mbedtls
   ]
   ++ pkgs.lib.optionals (variant == variants.video) [
     dav1d

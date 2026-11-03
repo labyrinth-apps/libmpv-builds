@@ -14,3 +14,5 @@
 - FFmpeg 8 / mpv 0.41 option fixes: no `--disable-postproc` (libpostproc removed in FFmpeg 8), no
   `-Dsubrandr`/`-Dlibcurl` (mpv master only). `scripts/{ffmpeg,mpv}_options_check.sh` fail the build
   in its first minute on any option the chosen version doesn't know.
+- TLS: FFmpeg uses Schannel (`--enable-schannel`) instead of OpenSSL, so `tls-verify=yes` checks against
+  the Windows trust store (OpenSSL had none). Gate: `smoke.py --tls`.

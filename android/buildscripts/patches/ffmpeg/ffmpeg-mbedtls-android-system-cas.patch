@@ -1,0 +1,58 @@
+Android: when verifying TLS without a ca_file, trust the system store (loaded once,
+shared read-only). mbedtls has no default store, so tls-verify=yes failed every
+HTTPS open. Prefers the updatable Conscrypt APEX store (Android 14+).
+
+--- a/libavformat/tls_mbedtls.c	2026-11-03 13:42:27
++++ b/libavformat/tls_mbedtls.c	2026-11-03 13:42:27
+@@ -41,6 +41,33 @@
+ #include "libavutil/parseutils.h"
+ #include "libavutil/avstring.h"
+ #include "libavutil/random_seed.h"
++
++#ifdef __ANDROID__
++#include <pthread.h>
++
++// Android's system trust store, loaded once and shared read-only. Used when
++// verifying without a ca_file (mbedtls has no default store of its own).
++static mbedtls_x509_crt android_roots;
++static int android_roots_ok;
++static pthread_once_t android_roots_once = PTHREAD_ONCE_INIT;
++
++static void load_android_roots(void)
++{
++    static const char *const dirs[] = {
++        "/apex/com.android.conscrypt/cacerts", // updatable store, Android 14+
++        "/system/etc/security/cacerts",
++    };
++    for (int i = 0; i < FF_ARRAY_ELEMS(dirs) && !android_roots_ok; i++) {
++        mbedtls_x509_crt_init(&android_roots);
++        // >= 0: number of files that failed to parse; < 0: unreadable dir.
++        if (mbedtls_x509_crt_parse_path(&android_roots, dirs[i]) >= 0 &&
++            android_roots.version != 0)
++            android_roots_ok = 1;
++        else
++            mbedtls_x509_crt_free(&android_roots);
++    }
++}
++#endif
+ 
+ static int mbedtls_x509_fingerprint(char *cert_buf, size_t cert_sz, char **fingerprint)
+ {
+@@ -634,6 +661,17 @@
+     mbedtls_ssl_conf_authmode(&tls_ctx->ssl_config,
+                               shr->verify ? MBEDTLS_SSL_VERIFY_OPTIONAL : MBEDTLS_SSL_VERIFY_NONE);
+     mbedtls_ssl_conf_rng(&tls_ctx->ssl_config, mbedtls_ctr_drbg_random, &tls_ctx->ctr_drbg_context);
++#ifdef __ANDROID__
++    if (shr->verify && !shr->ca_file) {
++        pthread_once(&android_roots_once, load_android_roots);
++        if (!android_roots_ok) {
++            av_log(h, AV_LOG_ERROR, "No Android system CA store to verify against\n");
++            ret = AVERROR(EINVAL);
++            goto fail;
++        }
++        mbedtls_ssl_conf_ca_chain(&tls_ctx->ssl_config, &android_roots, NULL);
++    } else
++#endif
+     mbedtls_ssl_conf_ca_chain(&tls_ctx->ssl_config, &tls_ctx->ca_cert, NULL);
+ 
+     // set own certificate and private key
