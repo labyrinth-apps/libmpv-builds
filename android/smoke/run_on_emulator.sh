@@ -16,9 +16,16 @@ adb push "$w/png/." $d/png/ >/dev/null
 adb shell chmod 755 $d/smoke
 
 # Untrusted-certificate HTTPS server on the host (the emulator reaches it at 10.0.2.2).
-python3 -c '
+python3 -u -c '
 import http.server, ssl, sys
-srv = http.server.ThreadingHTTPServer(("0.0.0.0", 8443), http.server.SimpleHTTPRequestHandler)
+class S(http.server.ThreadingHTTPServer):
+    def get_request(self):  # socketserver drops failed handshakes silently
+        print("TLS connection", flush=True)
+        return super().get_request()
+class H(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *a):
+        print("REQUEST", self.path, flush=True)
+srv = S(("0.0.0.0", 8443), H)
 ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER); ctx.load_cert_chain(sys.argv[1])
 srv.socket = ctx.wrap_socket(srv.socket, server_side=True); srv.serve_forever()
 ' "$(dirname "$0")/../../windows/smoke/selfsigned-untrusted.pem" > "$w/untrusted-server.log" 2>&1 &
@@ -43,6 +50,15 @@ if grep -q "segments pretend to be png" "$w/ours.log"; then
   echo "PNG-segment patch detected the disguised segments"
 else
   echo "PNG-segment patch did not report detecting PNG segments" >&2; rc=1
+fi
+# The untrusted check only counts if the emulator really connected to the server
+# and then sent no request (not a dead server or a network error).
+if grep -q "TLS connection" "$w/untrusted-server.log" && ! grep -q "^REQUEST" "$w/untrusted-server.log"; then
+  echo "Untrusted server: connected, no request (certificate rejected)"
+else
+  echo "Untrusted server log doesn't prove a rejection" >&2
+  cat "$w/untrusted-server.log" >&2 || true
+  rc=1
 fi
 # Control must get past the HTTPS open check and fail exactly on the seek.
 if grep -q "^PASS HTTPS fMP4 HLS opens" "$w/control.log" &&

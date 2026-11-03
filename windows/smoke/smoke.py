@@ -130,14 +130,19 @@ class _Server:
     def __init__(self, directory, tls=False):
         import functools, http.server, ssl, threading
         self.paths = []
+        self.connections = 0  # TLS connections, whether or not the handshake finished
         outer = self
 
         class H(http.server.SimpleHTTPRequestHandler):
             def log_message(self, *a):
                 outer.paths.append(self.path)
 
-        self.srv = http.server.ThreadingHTTPServer(
-            ("127.0.0.1", 0), functools.partial(H, directory=directory))
+        class S(http.server.ThreadingHTTPServer):
+            def get_request(self):  # socketserver drops failed handshakes silently
+                outer.connections += 1
+                return super().get_request()
+
+        self.srv = S(("127.0.0.1", 0), functools.partial(H, directory=directory))
         if tls:
             ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
             ctx.load_cert_chain(BAD_PEM)
@@ -155,8 +160,10 @@ def tls_checks(lib):
         with open(os.path.join(tmp, "seg.ts"), "wb") as f:
             f.write(urllib.request.urlopen(MUX_SEG, timeout=60).read())
         bad = _Server(tmp, tls=True)
-        check(not opens_raw(lib, f"{bad.url}/seg.ts") and not bad.paths,
-              "TLS: untrusted certificate rejected")
+        # Rejected = the client connected but never sent a request.
+        check(not opens_raw(lib, f"{bad.url}/seg.ts") and not bad.paths
+              and bad.connections > 0, "TLS: untrusted certificate rejected")
+        before = bad.connections
         # HLS segments get FFmpeg's default, not mpv's tls-verify: must still
         # verify. The playlist comes over plain HTTP (file:// can't fetch https).
         with open(os.path.join(tmp, "p.m3u8"), "w") as f:
@@ -169,7 +176,7 @@ def tls_checks(lib):
         p.close()
         plain.close()
         bad.close()
-        check(not played and "/seg.ts" not in bad.paths,
+        check(not played and "/seg.ts" not in bad.paths and bad.connections > before,
               "TLS: HLS segment behind an untrusted certificate is rejected")
 
 
