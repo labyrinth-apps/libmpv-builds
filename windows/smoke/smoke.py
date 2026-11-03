@@ -19,12 +19,21 @@ MUX = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
 MUX_SEG = "https://test-streams.mux.dev/x36xhzz/url_0/url_462/193039199_mp4_h264_aac_hd_7.ts"
 
 
+LOG = os.path.join(tempfile.gettempdir(), "mpv-smoke.log")
+
+
+def mpv_path(p):
+    # mpv's command string treats backslashes as escapes (Windows paths).
+    return p.replace("\\", "/")
+
+
 class Mpv:
     def __init__(self, lib):
         self.m = lib
         self.h = lib.mpv_create()
         for k, v in [("vo", "null"), ("ao", "null"), ("hr-seek", "yes"),
-                     ("demuxer-lavf-o", "allowed_extensions=ALL")]:
+                     ("demuxer-lavf-o", "allowed_extensions=ALL"),
+                     ("log-file", mpv_path(LOG)), ("msg-level", "all=v")]:
             lib.mpv_set_option_string(self.h, k.encode(), v.encode())
         lib.mpv_initialize(self.h)
 
@@ -75,6 +84,11 @@ def fnum(s):
 def check(ok, msg):
     print(("PASS " if ok else "FAIL ") + msg, flush=True)
     if not ok:
+        try:
+            lines = open(LOG, encoding="utf-8", errors="replace").read().splitlines()
+            print("--- last mpv log lines ---", *lines[-60:], sep="\n", flush=True)
+        except OSError:
+            pass
         sys.exit(1)
 
 
@@ -134,7 +148,7 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         pl = png_prefixed_playlist(tmp)
         p = Mpv(lib)
-        p.cmd(f'loadfile "{pl}"')
+        p.cmd(f'loadfile "{mpv_path(pl)}"')
         check(wait(lambda: (fnum(p.get("time-pos")) or 0) > 1.0, 60),
               "PNG-disguised TS segments decode (anime downloads)")
         ass = os.path.join(tmp, "t.ass")
@@ -143,7 +157,7 @@ def main():
                     "Format: Name, Fontname, Fontsize\nStyle: Default,Arial,20\n\n[Events]\n"
                     "Format: Layer, Start, End, Style, Text\n"
                     "Dialogue: 0,0:00:00.00,0:00:05.00,Default,hello\n")
-        p.cmd(f'sub-add "{ass}"')
+        p.cmd(f'sub-add "{mpv_path(ass)}"')
         check(wait(lambda: any(t.get("type") == "sub" for t in json.loads(p.get("track-list") or "[]")), 10),
               "ASS subtitle loads")
         p.close()
