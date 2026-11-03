@@ -27,15 +27,16 @@ for so in libmpv.so libmediakitandroidhelper.so; do
 done
 
 mpv="$t/lib/$abi/libmpv.so"
-syms=$("$bin/llvm-nm" -D --defined-only "$mpv")
+# (files, not pipes: grep -q closing early + pipefail would fail the check)
+"$bin/llvm-nm" -D --defined-only "$mpv" > "$t/syms"
 for s in mpv_create mpv_initialize mpv_lavc_set_java_vm mpv_render_context_create; do
-  echo "$syms" | grep -qw "$s" || fail "libmpv.so does not export $s"
+  grep -qw "$s" "$t/syms" || fail "libmpv.so does not export $s"
 done
-if echo "$syms" | grep -qE " (_ZNSt|_ZSt|__cxa_)"; then fail "libmpv.so exports C++ runtime symbols"; fi
+if grep -qE " (_ZNSt|_ZSt|__cxa_)" "$t/syms"; then fail "libmpv.so exports C++ runtime symbols"; fi
 
-strs=$("$bin/llvm-strings" "$mpv")
-echo "$strs" | grep -q -- "--disable-gpl" || fail "FFmpeg configuration lacks --disable-gpl"
-if echo "$strs" | grep -qE -- "--enable-(gpl|nonfree)"; then fail "FFmpeg configured with GPL/nonfree"; fi
-echo "$strs" | grep -q -- "-Dgpl=false" || fail "mpv configuration lacks -Dgpl=false"
-echo "$strs" | grep -m1 "^mpv v" || true
+"$bin/llvm-strings" "$mpv" > "$t/strs"
+grep -q -- "--disable-gpl" "$t/strs" || fail "FFmpeg configuration lacks --disable-gpl"
+if grep -qE -- "--enable-(gpl|nonfree)" "$t/strs"; then fail "FFmpeg configured with GPL/nonfree"; fi
+grep -q -- "-Dgpl=false" "$t/strs" || fail "mpv configuration lacks -Dgpl=false"
+grep -m1 "^mpv v" "$t/strs" || true
 echo "OK $abi: $(stat -c %s "$jar") bytes"
