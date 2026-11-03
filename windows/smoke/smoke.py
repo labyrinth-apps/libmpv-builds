@@ -117,7 +117,8 @@ def png_prefixed_playlist(tmp):
 
 def opens_raw(lib, url):
     """True if the TLS connection succeeded (rawaudio accepts any bytes)."""
-    p = Mpv(lib, [("demuxer", "rawaudio")])
+    # keep-open: a short file must still count as opened after it hits EOF.
+    p = Mpv(lib, [("demuxer", "rawaudio"), ("keep-open", "yes")])
     p.cmd(f'loadfile "{url}"')
     ok = wait(lambda: p.get("file-format") == "rawaudio", 20)
     p.close()
