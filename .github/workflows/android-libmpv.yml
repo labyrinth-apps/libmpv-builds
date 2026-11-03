@@ -31,7 +31,7 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
     steps:
       - id: tag
-        run: echo "tag=android-$(date -u +%Y%m%d)-mpv${MPV_VERSION}-ff${FFMPEG_VERSION}" >> "$GITHUB_OUTPUT"
+        run: echo "tag=android-$(date -u +%Y%m%d)-mpv${MPV_VERSION}-ff${FFMPEG_VERSION}-g${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build (${{ matrix.abi }})
