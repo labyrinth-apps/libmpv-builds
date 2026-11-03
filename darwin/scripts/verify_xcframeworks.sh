@@ -20,7 +20,11 @@ for xc in "$t"/*.xcframework; do
     IFS=: read -r slice archs minos <<<"$s"
     fw="$xc/$slice/$name.framework"
     bin="$fw/$name"
-    [ -e "$bin" ] || { err "$name: missing $slice slice"; continue; }
+    if [ ! -e "$bin" ]; then
+      err "$name: missing $slice slice (found: $(ls "$xc" | tr '\n' ' '))"
+      [ "$name" = Mpv ] && plutil -p "$xc/Info.plist" | grep -E "LibraryIdentifier|SupportedPlatform" >&2
+      continue
+    fi
     got=$(lipo -archs "$bin" | tr ' ' '\n' | sort | paste -sd, -)
     want=$(echo "$archs" | tr ',' '\n' | sort | paste -sd, -)
     [ "$got" = "$want" ] || err "$name/$slice: archs $got, want $want"
