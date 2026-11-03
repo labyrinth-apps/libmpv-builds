@@ -88,3 +88,4 @@ naming as upstream. Also `checksums.txt` (SwiftPM checksums) and
 `Package-<os>.swift.snippet`, in the shape of media_kit's `libmpvArtifactBase` /
 `libmpvChecksums`.
 - `nix/utils/xctoolchain/xcodebuild.swift`: detect iOS device binaries by `LC_BUILD_VERSION` `platform IOS` too. Upstream only matched `LC_VERSION_MIN_IPHONEOS`, which the linker no longer emits at minos ≥ 12, so the device slice came out as `unknown-arm64`.
+- `patches/mpv-fix-mac-client-without-swift.patch`: create mpv's "mac" client only when Swift is built. Without Swift nothing services it, and mpv 0.41 waits for every client to initialize before starting playback, so nothing ever played (found by the macOS smoke test; reproduced locally).

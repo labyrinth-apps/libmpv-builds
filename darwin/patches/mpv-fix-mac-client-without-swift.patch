@@ -1,0 +1,13 @@
+--- a/player/main.c
++++ b/player/main.c
+@@ -409,7 +409,9 @@
+ 
+     MP_STATS(mpctx, "start init");
+ 
+-#if HAVE_COCOA
++// The "mac" client is driven by the Swift event loop; without Swift nothing
++// ever services it, and playback waits forever for it to initialize.
++#if HAVE_COCOA && HAVE_SWIFT
+     mpv_handle *ctx = mp_new_client(mpctx->clients, "mac");
+     cocoa_set_mpv_handle(ctx);
+ #endif
