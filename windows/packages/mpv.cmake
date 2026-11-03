@@ -50,10 +50,8 @@ ExternalProject_Add(mpv
         -Dspirv-cross=enabled
         -Dvulkan=enabled
         -Dvapoursynth=disabled
-        -Dsubrandr=disabled
         -Dsixel=disabled
         ${mpv_gl}
-        -Dlibcurl=disabled
         -Dc_args='-Wno-error=int-conversion'
     BUILD_COMMAND ${EXEC} LTO_JOB=1 PDB=1 ninja -C <BINARY_DIR>
     INSTALL_COMMAND ""
@@ -108,4 +106,4 @@ ExternalProject_Add_Step(mpv copy-package-dir
 
 force_rebuild_git(mpv)
 force_meson_configure(mpv)
-cleanup(mpv copy-package-dir)
+# No cleanup: the licence gate reads mpv's config.h from the build dir.

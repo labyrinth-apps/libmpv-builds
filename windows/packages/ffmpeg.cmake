@@ -298,4 +298,4 @@ ExternalProject_Add(ffmpeg
 )
 
 force_rebuild_git(ffmpeg)
-cleanup(ffmpeg install)
+# No cleanup: licence/features gates read config.h and config_components.h from the build dir.

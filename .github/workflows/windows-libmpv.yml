@@ -57,6 +57,9 @@ jobs:
       - name: FFmpeg options check
         run: scripts/ffmpeg_options_check.sh ${{ matrix.ffmpeg_ref }}
 
+      - name: mpv options check
+        run: scripts/mpv_options_check.sh ${{ matrix.mpv_ref }}
+
       - name: Loading clang root
         uses: actions/cache/restore@v4
         with:
