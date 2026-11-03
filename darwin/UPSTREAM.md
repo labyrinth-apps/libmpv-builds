@@ -13,7 +13,7 @@ Built by `.github/workflows/darwin-libmpv.yml` on GitHub Actions (`macos-15`, Xc
 - Removed the `audio` variant, the `full` and GPL `encodersgpl` flavours, and the
   packages only they used: libx264, libvpx, libvorbis, libogg, fftools-ffi.
 - FFmpeg also gets explicit `--disable-gpl --disable-nonfree` (next to `--enable-version3`,
-  needed for mbedtls). mpv uses `-Dgpl=false`.
+  kept for LGPLv3). mpv uses `-Dgpl=false`.
 - `scripts/licence_gate.sh` fails the build unless every FFmpeg `config.h` has
   `CONFIG_GPL 0` / `CONFIG_NONFREE 0`, its `config.mak` has no GPL/nonfree libs, and every mpv
   `config.h` has `HAVE_GPL 0`. `scripts/test_licence_gate.sh` proves it rejects fake GPL configs.
@@ -27,7 +27,7 @@ Built by `.github/workflows/darwin-libmpv.yml` on GitHub Actions (`macos-15`, Xc
 | mpv | 0.36.0 | 0.41.0 |
 | FFmpeg | 6.0 | 8.1.3 |
 | libplacebo | — | 7.360.1 (new, static, see below) |
-| mbedtls | 3.4.1 | 3.6.7 (3.6 LTS; 4.x removed APIs FFmpeg uses; release tarball, which includes the `framework/` submodule) |
+| mbedtls | 3.4.1 | removed (2026-11-03): FFmpeg uses Secure Transport; `mk-pkg-mbedtls` and its lock entry are unused |
 | dav1d | 1.2.1 | 1.5.4 |
 | libass | 0.17.1 | 0.17.5 |
 | fribidi | 1.0.13 | 1.0.18 |
@@ -39,7 +39,7 @@ Built by `.github/workflows/darwin-libmpv.yml` on GitHub Actions (`macos-15`, Xc
 
 libplacebo is required since mpv 0.37. It is built static, OpenGL-only (vulkan, shaderc,
 glslang, lcms, dovi/libdovi, d3d11, unwind, xxhash, gl-proc-addr off) and linked into
-libmpv, so the output is still the same 18 frameworks as upstream v0.7.2. Its GitHub
+libmpv, so it adds no framework (15 today: upstream v0.7.2's 18 minus the three mbedtls ones). Its GitHub
 tarball lacks submodules, so `glad` and `fast_float` are fetched separately at the
 v7.360.1 submodule commits; glad's generator runs with nixpkgs' jinja2. 7.360.1 is the
 latest release that has had time to settle; 7.387.0 was a week old at import time.
@@ -55,7 +55,7 @@ macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are go
 - harfbuzz: `-Dauto_features=disabled -Dcoretext=enabled`, and the raster/vector/gpu/subset
   libraries are off (newer harfbuzz builds them by default; they would become extra frameworks).
 - libpng: `-Dtests=false` (newer wrapdb builds test programs).
-- mbedtls: `ENABLE_PROGRAMS=OFF ENABLE_TESTING=OFF`.
+- mbedtls (unused since Secure Transport): `ENABLE_PROGRAMS=OFF ENABLE_TESTING=OFF`.
 - FFmpeg: also enables the `image_png_pipe`, `gif` and `image_gif_pipe` demuxers, so the
   PNG-segment patch can detect disguised segments; plus (owner-approved, same scope as
   windows/) TrueHD/MLP, VC-1, EIA-608 (`ccaption`) decoders, mlp/vc1 demuxers and parsers,

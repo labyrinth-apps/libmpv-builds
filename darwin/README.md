@@ -1,3 +1,6 @@
+> **Labyrinth fork:** this is the upstream README, kept for reference. For what this folder builds here
+> and how, see the repo's `README.md`, `CLAUDE.md` and `darwin/UPSTREAM.md`.
+
 # libmpv build
 
 Provides builds of [libmpv](https://github.com/mpv-player/mpv) for macOS & iOS,

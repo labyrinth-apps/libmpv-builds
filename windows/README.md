@@ -1,3 +1,6 @@
+> **Labyrinth fork:** this is the upstream README, kept for reference. For what this folder builds here
+> and how, see the repo's `README.md`, `CLAUDE.md` and `windows/UPSTREAM.md`.
+
 # CMake-based MinGW-w64 Cross Toolchain
 
 This thing’s primary use is to build Windows binaries of mpv.
