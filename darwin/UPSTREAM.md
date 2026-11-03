@@ -87,3 +87,4 @@ One zip per xcframework,
 naming as upstream. Also `checksums.txt` (SwiftPM checksums) and
 `Package-<os>.swift.snippet`, in the shape of media_kit's `libmpvArtifactBase` /
 `libmpvChecksums`.
+- `nix/utils/xctoolchain/xcodebuild.swift`: detect iOS device binaries by `LC_BUILD_VERSION` `platform IOS` too. Upstream only matched `LC_VERSION_MIN_IPHONEOS`, which the linker no longer emits at minos ≥ 12, so the device slice came out as `unknown-arm64`.
