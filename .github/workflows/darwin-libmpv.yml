@@ -85,6 +85,18 @@ jobs:
           echo "$TAG" > .nix/config/version.txt
           echo "NIX_BUILD=nix build -L --keep-going --option sandbox true --option sandbox-fallback false --option extra-sandbox-paths $XCODE_PATH" >> "$GITHUB_ENV"
 
+      # ffmpeg.org often resets/times out from GitHub's macOS runners; nix's own
+      # fetch tries briefly. Pre-fetch with patient retries into the store
+      # (same pinned file and sha256), so the build finds it there.
+      - name: Pre-fetch FFmpeg source
+        run: |
+          url=$(sed -n '/^  ffmpeg = {/,/};/s/.*url = "\(.*\)";/\1/p' packages.lock.nix)
+          for i in 1 2 3 4 5 6 7 8; do
+            nix-prefetch-url "$url" && exit 0
+            echo "attempt $i failed; retrying in 30s"; sleep 30
+          done
+          exit 1
+
       - name: Build
         env:
           DEBUG_TARGET: ${{ inputs.target }}
