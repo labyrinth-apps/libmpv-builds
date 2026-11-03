@@ -12,6 +12,7 @@ else
 	exit 255
 fi
 
+set -o pipefail
 mkdir -p _build$ndk_suffix
 cd _build$ndk_suffix
 
@@ -152,7 +153,6 @@ cpuflags=
 	--enable-demuxer=data \
 	--enable-demuxer=flv \
 	--enable-demuxer=hls \
-	--enable-demuxer=latm \
 	--enable-demuxer=live_flv \
 	--enable-demuxer=loas \
 	--enable-demuxer=m4v \
@@ -162,7 +162,6 @@ cpuflags=
 	--enable-demuxer=mpegvideo \
 	--enable-demuxer=hevc \
 	--enable-demuxer=rtsp \
-	--enable-demuxer=mpeg4 \
 	--enable-demuxer=mjpeg* \
 	--enable-demuxer=avi \
 	--enable-demuxer=av1 \
@@ -172,9 +171,9 @@ cpuflags=
 	--enable-demuxer=mlp \
 	--enable-demuxer=vc1 \
 	`# probed by ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` \
-	--enable-demuxer=png_pipe \
+	--enable-demuxer=image_png_pipe \
 	--enable-demuxer=gif \
-	--enable-demuxer=gif_pipe \
+	--enable-demuxer=image_gif_pipe \
 	\
 	--enable-demuxer=aac \
 	--enable-demuxer=ac3 \
@@ -215,7 +214,6 @@ cpuflags=
 	--enable-parser=h263 \
 	--enable-parser=h264 \
 	--enable-parser=hevc \
-	--enable-parser=mpeg4 \
 	--enable-parser=mpeg4video \
 	--enable-parser=mpegvideo \
 	\
@@ -236,10 +234,6 @@ cpuflags=
 	`# deinterlacing for 1080i live TV (mpv inserts these through lavfi)` \
 	--enable-filter=bwdif \
 	--enable-filter=yadif \
-	--enable-filter=buffer \
-	--enable-filter=buffersink \
-	--enable-filter=abuffer \
-	--enable-filter=abuffersink \
 	--enable-filter=format \
 	--enable-filter=aformat \
 	--enable-filter=null \
@@ -275,6 +269,12 @@ cpuflags=
 	--enable-encoder=jpegls \
 	\
 	--enable-network \
+	2>&1 | tee configure.out
+
+# a misspelt --enable-<component> is only a warning: treat it as an error
+if grep -iE "did not match anything|unknown option" configure.out; then
+	exit 1
+fi
 
 make -j$cores
 make DESTDIR="$prefix_dir" install

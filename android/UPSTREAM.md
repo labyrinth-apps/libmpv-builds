@@ -57,10 +57,13 @@ as `darwin/packages.lock.nix`):
 - harfbuzz: `-Dauto_features=disabled`, raster/vector/gpu/subset/utilities off.
 - freetype: optional deps (brotli, bzip2, harfbuzz, png, zlib) off. libass: no fontconfig/libunibreak.
 - FFmpeg: `--disable-postproc` dropped (libpostproc was removed in 8.0). Also enables the
-  `png_pipe`, `gif` and `gif_pipe` demuxers so the PNG-segment patch can detect disguised segments.
+  `image_png_pipe`, `gif` and `image_gif_pipe` demuxers so the PNG-segment patch can detect disguised
+  segments. Dropped upstream's no-op `--enable-demuxer=latm`, `--enable-demuxer=mpeg4` and
+  `--enable-parser=mpeg4` (no such components); configure now fails on any option that matches nothing.
 - FFmpeg, owner-approved additions (same as `windows/`): decoders `truehd mlp vc1* pgssub ccaption`;
-  demuxers `mlp vc1`; parsers `mlp vc1`; filters `bwdif yadif buffer buffersink abuffer abuffersink
-  format aformat null anull` (mpv inserts deinterlacers through lavfi).
+  demuxers `mlp vc1`; parsers `mlp vc1`; filters `bwdif yadif format aformat null anull`
+  (`buffer`/`buffersink`/`abuffer`/`abuffersink` are always built in FFmpeg 8 and are not
+  configurable components) (mpv inserts deinterlacers through lavfi).
 - `libmediakitandroidhelper.so` is built from the same helper commit with the NDK's CMake toolchain
   (`c++_static`, Release, stripped) instead of assembling the helper's demo APK with Gradle.
 
