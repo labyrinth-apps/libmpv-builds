@@ -56,8 +56,13 @@ macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are go
   libraries are off (newer harfbuzz builds them by default; they would become extra frameworks).
 - libpng: `-Dtests=false` (newer wrapdb builds test programs).
 - mbedtls: `ENABLE_PROGRAMS=OFF ENABLE_TESTING=OFF`.
-- FFmpeg: also enables the `png_pipe`, `gif` and `gif_pipe` demuxers, so the PNG-segment
-  patch can detect disguised segments.
+- FFmpeg: also enables the `image_png_pipe`, `gif` and `image_gif_pipe` demuxers, so the
+  PNG-segment patch can detect disguised segments; plus (owner-approved, same scope as
+  windows/) TrueHD/MLP, VC-1, EIA-608 (`ccaption`) decoders, mlp/vc1 demuxers and parsers,
+  and the bwdif/yadif deinterlacers with format/aformat/null/anull. `scripts/features_gate.sh`
+  checks they are present.
+- mpv: `-Db_lundef=true`, so unresolved symbols fail the link instead of being deferred to
+  load time with `-undefined dynamic_lookup`.
 
 ## Patches (`patches/`)
 
@@ -66,7 +71,7 @@ macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are go
 | `ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` | **added** | Copied from `windows/packages/` (wang-bin). HLS segments with a PNG/GIF header in front of TS (anime downloads) play again; FFmpeg 7+ refuses them otherwise. |
 | `ffmpeg-fix-ios-hdr-texture.patch` | kept, rebased | iOS GLES can't take 10-bit textures, so VideoToolbox outputs BGRA for >8-bit 4:2:0. FFmpeg 8.1 also has 10-bit 4:2:2/4:4:4 VT formats (P210/P410/P216/P416) that this patch does not cover. |
 | `mpv-audiounit-shared-session.patch` | kept, rebased | Ref-counted AVAudioSession plus the `audiounit-skip-session-management` option that media_kit sets. 0.41 already picks MixWithOthers vs exclusive itself; the patch now passes those options through. |
-| `mpv-fix-missing-objc.patch` | kept, rebased | 0.41 only calls `add_languages('objc')` when `TOOLS/macos-sdk-version.py` finds `xcrun`, which isn't on PATH in the Nix sandbox. |
+| `mpv-fix-missing-objc.patch` | kept, rebased, extended | Adds `add_languages('objc')` for cocoa/audiounit. Also skips 0.41's host macOS SDK probe unless the Swift build is on: in the sandbox it finds nixpkgs' `xcrun` and appended a macOS 11.3 SDK `-isysroot` and `-L/usr/lib` to every libmpv link, iOS included. |
 | `mpv-fix-cocoa-without-swift.patch` | **added** | `clipboard-mac.m` includes the Swift-generated `swift.h`, but meson builds it whenever `cocoa` is on. The Swift build is off here, so it is now built (and registered) only with Swift. |
 | `ltmain-target-passthrough.patch` | kept, rebased | Newer libtool added `-q` to the same line. |
 | `ffmpeg-fix-hls-mp4-seek.patch` | dropped | FFmpeg 8.1 seeks fMP4 HLS correctly (the smoke test checks this). |

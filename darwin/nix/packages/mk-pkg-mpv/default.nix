@@ -80,6 +80,7 @@ pkgs.stdenvNoCC.mkDerivation {
     # Start from nothing and enable only what media_kit needs.
     OPTIONS=(
       -Dauto_features=disabled
+      -Db_lundef=true `# fail on unresolved symbols instead of -undefined dynamic_lookup`
 
       `# booleans (not covered by auto_features)`
       -Dgpl=false `# LGPL build`

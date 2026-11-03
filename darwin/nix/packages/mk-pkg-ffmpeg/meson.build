@@ -148,7 +148,6 @@ audio_default_options = [
     '--enable-protocol=ffrtmphttp',
     '--enable-protocol=file',
     '--enable-protocol=ftp',
-    '--enable-protocol=hls',
     '--enable-protocol=http',
     '--enable-protocol=httpproxy',
     '--enable-protocol=https',
@@ -224,13 +223,11 @@ video_default_options = [
     '--enable-demuxer=truehd',
     '--enable-parser=mlp',
     '--enable-parser=vc1',
-    # deinterlacing (mpv inserts these through lavfi) + graph plumbing
+    # deinterlacing (mpv inserts these through lavfi) + graph plumbing.
+    # buffer/buffersink/abuffer/abuffersink are always built in FFmpeg 8
+    # (not configurable components).
     '--enable-filter=bwdif',
     '--enable-filter=yadif',
-    '--enable-filter=buffer',
-    '--enable-filter=buffersink',
-    '--enable-filter=abuffer',
-    '--enable-filter=abuffersink',
     '--enable-filter=format',
     '--enable-filter=aformat',
     '--enable-filter=null',
@@ -267,9 +264,9 @@ video_default_options = [
     '--enable-demuxer=dash', # --enable-libxml2 required
     '--enable-demuxer=webm_dash_manifest',
     # probed by ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch
-    '--enable-demuxer=png_pipe',
+    '--enable-demuxer=image_png_pipe',
     '--enable-demuxer=gif',
-    '--enable-demuxer=gif_pipe',
+    '--enable-demuxer=image_gif_pipe',
 
     '--enable-demuxer=ass',
     '--enable-demuxer=srt',
