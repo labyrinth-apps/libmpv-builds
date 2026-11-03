@@ -246,7 +246,6 @@ cpuflags=
 	--enable-protocol=ffrtmphttp \
 	--enable-protocol=file \
 	--enable-protocol=ftp \
-	--enable-protocol=hls \
 	--enable-protocol=http \
 	--enable-protocol=httpproxy \
 	--enable-protocol=https \
@@ -259,7 +258,6 @@ cpuflags=
 	--enable-protocol=subfile \
 	--enable-protocol=tcp \
 	--enable-protocol=tls \
-	--enable-protocol=srt \
 	\
 	--enable-encoder=mjpeg \
 	--enable-encoder=ljpeg \

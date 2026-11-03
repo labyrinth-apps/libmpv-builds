@@ -59,7 +59,7 @@ as `darwin/packages.lock.nix`):
 - FFmpeg: `--disable-postproc` dropped (libpostproc was removed in 8.0). Also enables the
   `image_png_pipe`, `gif` and `image_gif_pipe` demuxers so the PNG-segment patch can detect disguised
   segments. Dropped upstream's no-op `--enable-demuxer=latm`, `--enable-demuxer=mpeg4` and
-  `--enable-parser=mpeg4` (no such components); configure now fails on any option that matches nothing.
+  `--enable-parser=mpeg4`, `--enable-protocol=hls` and `--enable-protocol=srt` (no such components in 8.1; the HLS demuxer is unaffected); configure now fails on any option that matches nothing.
 - FFmpeg, owner-approved additions (same as `windows/`): decoders `truehd mlp vc1* pgssub ccaption`;
   demuxers `mlp vc1`; parsers `mlp vc1`; filters `bwdif yadif format aformat null anull`
   (`buffer`/`buffersink`/`abuffer`/`abuffersink` are always built in FFmpeg 8 and are not
