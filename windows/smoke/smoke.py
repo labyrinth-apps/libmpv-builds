@@ -183,6 +183,8 @@ def main():
     ap.add_argument("--tls", action="store_true",
                     help="run with tls-verify=yes and require bad certificates to be rejected")
     a = ap.parse_args()
+    # Windows consoles (cp1252) can't print every character in mpv's log.
+    sys.stdout.reconfigure(errors="backslashreplace")
     lib = load(a.dll)
     if a.tls:
         EXTRA_OPTS.append(("tls-verify", "yes"))

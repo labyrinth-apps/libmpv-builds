@@ -167,7 +167,7 @@ jobs:
         run: |
           mkdir up
           base=https://github.com/media-kit/libmpv-darwin-build/releases/download/v0.7.2/libmpv-xcframeworks_v0.7.2_macos-universal-video-default
-          for fw in Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mpv Png16 Swresample Swscale Uchardet Xml2; do
+          for fw in Ass Avcodec Avfilter Avformat Avutil Dav1d Freetype Fribidi Harfbuzz Mbedcrypto Mbedtls Mbedx509 Mpv Png16 Swresample Swscale Uchardet Xml2; do
             curl -sSfL -o "up/$fw.zip" "${base}_$fw.zip"
           done
           # Verify against media_kit's published SwiftPM checksums before unzipping
