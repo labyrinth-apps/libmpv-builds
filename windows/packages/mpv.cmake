@@ -3,6 +3,10 @@
 if(NOT DEFINED MPV_REF)
     set(MPV_REF "v0.41.0")
 endif()
+# 0.41.0 only: newer ANGLE headers dropped D3D9 (mpv master has this).
+if(MPV_REF STREQUAL "v0.41.0")
+    set(mpv_patch PATCH_COMMAND ${EXEC} git apply ${CMAKE_CURRENT_SOURCE_DIR}/mpv-0.41-angle-remove-d3d9.patch)
+endif()
 
 ExternalProject_Add(mpv
     DEPENDS
@@ -22,6 +26,7 @@ ExternalProject_Add(mpv
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_RESET ${MPV_REF}
+    ${mpv_patch}
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${EXEC} CONF=1 meson setup <BINARY_DIR> <SOURCE_DIR>
         --prefix=${MINGW_INSTALL_PREFIX}
