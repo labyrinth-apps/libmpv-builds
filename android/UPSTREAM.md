@@ -18,7 +18,9 @@ unused root Gradle project. `flavors/default.sh` is now `scripts/ffmpeg.sh` (FFm
 **Outputs unchanged in shape:** `default-<abi>.jar` for arm64-v8a, armeabi-v7a, x86_64 and x86,
 each containing exactly `lib/<abi>/libmediakitandroidhelper.so` and `lib/<abi>/libmpv.so`
 (FFmpeg and libplacebo static inside libmpv), as in v1.1.7. Plus `default-<abi>.jar.md5`.
-Native API level 21 (as upstream), 16 KB page alignment (as upstream).
+Native API level 21 (as upstream), 16 KB page alignment (as upstream). The helper's exported
+JNI/`MediaKitAndroidHelper*` symbols and libmpv's `mpv_*` exports match v1.1.7. New: libmpv now
+also NEEDs `libmediandk.so` (a public NDK library since API 21; FFmpeg 8.1's MediaCodec NDK path).
 
 **Versions** (`buildscripts/include/depinfo.sh`; release tarballs pinned by sha256, the same pins
 as `darwin/packages.lock.nix`):
@@ -86,5 +88,5 @@ as `darwin/packages.lock.nix`):
   `mpv_lavc_set_java_vm` exported, no exported C++ runtime, 16 KB LOAD alignment, LGPL configure strings.
 - `smoke/`: on an x86_64 emulator (API 30), a small NDK executable `dlopen`s libmpv.so (vo/ao null) and
   checks HTTPS fMP4 HLS open + `seek 30 absolute` landing in 30.3–36 s, Mux TS HLS plays, PNG-prefixed
-  TS segments decode, the added decoders exist and `vf add bwdif` works. The same binary against
+  TS segments decode (and the patch logs that it detected them), the added decoders exist and `vf add bwdif` works. The same binary against
   upstream v1.1.7's x86_64 jar (MD5-verified) must fail the seek check.

@@ -29,6 +29,12 @@ if grep -q "^ALL PASS" "$w/ours.log" && grep -q "^SMOKE_EXIT=0" "$w/ours.log"; t
 else
   echo "Our build FAILED the smoke test" >&2; rc=1
 fi
+# The PNG case must be decoded *because of* the patch, not by luck of the TS probe.
+if grep -q "segments pretend to be png" "$w/ours.log"; then
+  echo "PNG-segment patch detected the disguised segments"
+else
+  echo "PNG-segment patch did not report detecting PNG segments" >&2; rc=1
+fi
 # Control must get past the HTTPS open check and fail exactly on the seek.
 if grep -q "^PASS HTTPS fMP4 HLS opens" "$w/control.log" &&
    grep -q "^FAIL fMP4 seek lands near the target" "$w/control.log"; then

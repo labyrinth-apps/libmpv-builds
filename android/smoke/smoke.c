@@ -183,6 +183,8 @@ int main(int argc, char **argv)
     close_player();
 
     open_player();
+    // lavf INFO is mpv's verbose level: shows the PNG patch's "segments pretend to be png"
+    mpv_command_string(h, "set msg-level all=warn,ffmpeg/demuxer=v");
     snprintf(cmd, sizeof(cmd), "loadfile \"%s\"", argv[2]);
     mpv_command_string(h, cmd);
     check(WAIT(num("time-pos", 0) > 1.0, 60), "PNG-disguised TS segments decode (anime downloads)");
