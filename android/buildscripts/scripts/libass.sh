@@ -12,18 +12,18 @@ else
 	exit 255
 fi
 
-[ -f configure ] || ./autogen.sh
-
 mkdir -p _build$ndk_suffix
 cd _build$ndk_suffix
 
 ../configure \
-	CFLAGS=-fPIC CXXFLAGS=-fPIC \
+	CFLAGS="-O2 -fPIC" CXXFLAGS="-O2 -fPIC" \
 	--host=$ndk_triple \
 	--with-pic \
 	--disable-asm \
-	--enable-static\
+	--enable-static \
 	--disable-shared \
+	--disable-fontconfig \
+	--disable-libunibreak \
 	--disable-require-system-font-provider
 
 make -j$cores

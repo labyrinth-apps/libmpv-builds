@@ -17,7 +17,7 @@ loadarch () {
 	unset CC CXX CPATH LIBRARY_PATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH
     unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
 
-	local apilvl=21
+	local apilvl=$v_api
 	# ndk_triple: what the toolchain actually is
 	# cc_triple: what Google pretends the toolchain is
 	if [ "$1" == "armv7l" ]; then
@@ -44,8 +44,8 @@ loadarch () {
 		echo "Invalid architecture"
 		exit 1
 	fi
+	export prefix_name
 	export prefix_dir="$PWD/prefix/$prefix_name"
-	export native_dir="$PWD/../libmpv/src/main/jniLibs/$prefix_name"
 	export CC=$cc_triple-clang
 	if [[ "$1" == arm* ]]; then
 		export AS="$CC"
@@ -53,7 +53,7 @@ loadarch () {
 		export AS="nasm"
 	fi
 	export CXX=$cc_triple-clang++
-	export LDFLAGS="-Wl,-O1,--icf=safe -Wl,-z,max-page-size=16384"
+	export LDFLAGS="-Wl,-O1,--icf=safe -Wl,-z,max-page-size=16384 -Wl,--exclude-libs,libc++_static.a -Wl,--exclude-libs,libc++abi.a"
 	export AR=llvm-ar
 	export RANLIB=llvm-ranlib
 }
@@ -64,10 +64,6 @@ setup_prefix () {
 		# enforce flat structure (/usr/local -> /)
 		ln -s . "$prefix_dir/usr"
 		ln -s . "$prefix_dir/local"
-	fi
-	
-	if [ ! -d "$native_dir" ]; then
-		mkdir -p "$native_dir"
 	fi
 
 	local cpu_family=${ndk_triple%%-*}
@@ -112,9 +108,8 @@ build () {
 	printf >&2 '\e[1;34m%s\e[m\n' "Building $1..."
 	pushd deps/$1
 	BUILDSCRIPT=../../scripts/$1.sh
- 	sudo chmod +x $BUILDSCRIPT
-	[ $cleanbuild -eq 1 ] && $BUILDSCRIPT clean
-    $BUILDSCRIPT build
+	[ $cleanbuild -eq 1 ] && bash $BUILDSCRIPT clean
+	bash $BUILDSCRIPT build
     popd
 }
 

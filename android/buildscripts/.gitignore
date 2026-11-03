@@ -3,3 +3,5 @@ sdk
 prefix
 prefix64
 *.tgz
+dl
+artifacts

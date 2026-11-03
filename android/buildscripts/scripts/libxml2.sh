@@ -3,29 +3,21 @@
 . ../../include/depinfo.sh
 . ../../include/path.sh
 
+build=_build$ndk_suffix
+
 if [ "$1" == "build" ]; then
 	true
 elif [ "$1" == "clean" ]; then
-	rm -rf _build$ndk_suffix
+	rm -rf $build
 	exit 0
 else
 	exit 255
 fi
 
-[ -f configure ] || ./autogen.sh
+unset CC CXX # meson wants these unset
 
-mkdir -p _build$ndk_suffix
-cd _build$ndk_suffix
+meson setup $build --cross-file "$prefix_dir"/crossfile.txt \
+	-Dminimum=true -D{push,reader,sax1,iso8859x,pattern,threads}=enabled
 
-../configure \
-    CFLAGS=-fPIC CXXFLAGS=-fPIC \
-	--host=$ndk_triple \
-    --disable-shared \
-    --enable-static \
-    --with-minimum \
-    --with-threads \
-    --with-tree \
-    --without-lzma \
-
-make -j$cores
-make DESTDIR="$prefix_dir" install
+ninja -C $build -j$cores
+DESTDIR="$prefix_dir" ninja -C $build install

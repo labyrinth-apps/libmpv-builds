@@ -1,21 +1,12 @@
 #!/bin/bash -e
+# Applies patches/<dep>/*.patch to deps/<dep> (plain source trees, so `patch`, not `git apply`).
 
-PATCHES=(patches/*)
 ROOT=$(pwd)
-
-for dep_path in "${PATCHES[@]}"; do
-    if [ -d "$dep_path" ]; then
-        patches=($dep_path/*)
-        dep=$(echo $dep_path |cut -d/ -f 2)
-        cd deps/$dep
-        echo Patching $dep
-        git reset --hard
-        for patch in "${patches[@]}"; do
-            echo Applying $patch
-            git apply "$ROOT/$patch"
-        done
-        cd $ROOT
-    fi
+for dep_path in patches/*; do
+	[ -d "$dep_path" ] || continue
+	dep=$(basename "$dep_path")
+	for p in "$dep_path"/*.patch; do
+		echo "Applying $p to $dep"
+		patch -d "deps/$dep" -p1 -N --no-backup-if-mismatch < "$ROOT/$p"
+	done
 done
-
-exit 0

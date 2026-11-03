@@ -16,8 +16,10 @@ fi
 
 unset CC CXX # meson wants these unset
 
+# harfbuzz >= 11 also builds raster/vector/gpu/subset libraries: off
 meson setup $build --cross-file "$prefix_dir"/crossfile.txt \
-	-Dtests=disabled -Ddocs=disabled
+	-Dauto_features=disabled \
+	-D{raster,vector,gpu,subset,utilities,tests,docs}=disabled
 
 ninja -C $build -j$cores
 DESTDIR="$prefix_dir" ninja -C $build install
