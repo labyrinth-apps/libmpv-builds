@@ -27,6 +27,8 @@ jobs:
   build:
     name: Build (${{ matrix.variant }})
     runs-on: ubuntu-latest
+    # Only the variant being released gates the release; the other is informational.
+    continue-on-error: ${{ matrix.variant != (inputs.release_variant || 'stable') }}
     strategy:
       fail-fast: false
       matrix:
@@ -123,6 +125,8 @@ jobs:
     name: Smoke (${{ matrix.variant }})
     needs: build
     runs-on: windows-latest
+    # Only the variant being released gates the release; the other is informational.
+    continue-on-error: ${{ matrix.variant != (inputs.release_variant || 'stable') }}
     permissions:
       contents: read
     strategy:
