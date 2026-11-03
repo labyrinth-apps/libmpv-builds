@@ -223,6 +223,9 @@ ExternalProject_Add(ffmpeg
         --enable-demuxer=dtshd
         --enable-demuxer=mlp
         --enable-demuxer=vc1
+        # The PNG-segment patch probes for these to detect disguised segments
+        --enable-demuxer=image_png_pipe
+        --enable-demuxer=image_gif_pipe
 
         --enable-demuxer=ass
         --enable-demuxer=srt
@@ -256,10 +259,6 @@ ExternalProject_Add(ffmpeg
         # Deinterlacing for 1080i live TV (mpv inserts these through lavfi)
         --enable-filter=bwdif
         --enable-filter=yadif
-        --enable-filter=buffer
-        --enable-filter=buffersink
-        --enable-filter=abuffer
-        --enable-filter=abuffersink
         --enable-filter=format
         --enable-filter=aformat
         --enable-filter=null
@@ -272,7 +271,6 @@ ExternalProject_Add(ffmpeg
         --enable-protocol=ffrtmphttp
         --enable-protocol=file
         --enable-protocol=ftp
-        --enable-protocol=hls
         --enable-protocol=http
         --enable-protocol=httpproxy
         --enable-protocol=https
