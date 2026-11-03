@@ -1,0 +1,29 @@
+--- a/meson.build
++++ b/meson.build
+@@ -813,6 +813,8 @@
+ if features['audiounit']
+     add_languages('objc')
+     dependencies += audiounit['deps']
++    # AVAudioSession lives in AVFoundation
++    dependencies += dependency('appleframeworks', modules: ['AVFoundation'])
+     sources += files('audio/out/ao_audiounit.m')
+ endif
+ 
+@@ -1428,6 +1430,8 @@
+     get_option('ios-gl').require(darwin))
+ features += {'ios-gl': ios_gl}
+ if features['ios-gl']
++    # EAGLContext + CVOpenGLESTextureCache*
++    dependencies += dependency('appleframeworks', modules: ['OpenGLES', 'CoreVideo'])
+     sources += files('video/out/hwdec/hwdec_ios_gl.m')
+ endif
+ 
+@@ -1516,6 +1520,8 @@
+     sources += files('video/out/hwdec/hwdec_vt.c')
+ endif
+ if features['videotoolbox-gl']
++    # IOSurfaceGet*OfPlane
++    dependencies += dependency('appleframeworks', modules: ['IOSurface'])
+     sources += files('video/out/hwdec/hwdec_mac_gl.c')
+ endif
+ if features['videotoolbox-pl']

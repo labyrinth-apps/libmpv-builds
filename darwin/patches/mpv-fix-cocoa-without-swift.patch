@@ -10,7 +10,7 @@
      main_fn_source = files('osdep/main-fn-mac.c')
  endif
  
-@@ -1584,6 +1583,8 @@
+@@ -1586,6 +1585,8 @@
  
  swift_sources = []
  if features['cocoa'] and features['swift']
@@ -30,3 +30,16 @@
      &clipboard_backend_mac,
  #endif
  #if HAVE_WAYLAND && HAVE_WAYLAND_PROTOCOLS_1_39
+--- a/osdep/mac/app_bridge.m
++++ b/osdep/mac/app_bridge.m
+@@ -165,4 +165,10 @@
+ {
+     return [(Application *)[Application sharedApplication] main:argc :argv];
+ }
++#else
++// libmpv without the Swift build: media keys and the app hub are unavailable.
++void cocoa_init_media_keys(void) {}
++void cocoa_uninit_media_keys(void) {}
++void cocoa_set_input_context(struct input_ctx *input_context) {}
++void cocoa_set_mpv_handle(struct mpv_handle *ctx) {}
+ #endif
