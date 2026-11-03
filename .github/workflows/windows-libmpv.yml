@@ -53,6 +53,10 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      # Fails fast (before the hour-long build) on options this FFmpeg doesn't know.
+      - name: FFmpeg options check
+        run: scripts/ffmpeg_options_check.sh ${{ matrix.ffmpeg_ref }}
+
       - name: Loading clang root
         uses: actions/cache/restore@v4
         with:

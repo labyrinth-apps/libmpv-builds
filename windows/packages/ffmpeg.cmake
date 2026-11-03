@@ -44,7 +44,6 @@ ExternalProject_Add(ffmpeg
         --disable-protocols
         --disable-filters
         --disable-doc
-        --disable-postproc
         --disable-programs
         --disable-gray
         --disable-swscale-alpha
@@ -162,7 +161,6 @@ ExternalProject_Add(ffmpeg
         --enable-decoder=ccaption
 
         --enable-decoder=mjpeg
-        --enable-decoder=ljpeg
         --enable-decoder=jpegls
         --enable-decoder=jpeg2000
         --enable-decoder=png
@@ -176,7 +174,6 @@ ExternalProject_Add(ffmpeg
         --enable-demuxer=data
         --enable-demuxer=flv
         --enable-demuxer=hls
-        --enable-demuxer=latm
         --enable-demuxer=live_flv
         --enable-demuxer=loas
         --enable-demuxer=m4v
@@ -186,7 +183,6 @@ ExternalProject_Add(ffmpeg
         --enable-demuxer=mpegvideo
         --enable-demuxer=hevc
         --enable-demuxer=rtsp
-        --enable-demuxer=mpeg4
         --enable-demuxer=mjpeg*
         --enable-demuxer=avi
         --enable-demuxer=av1
@@ -238,7 +234,6 @@ ExternalProject_Add(ffmpeg
         --enable-parser=h263
         --enable-parser=h264
         --enable-parser=hevc
-        --enable-parser=mpeg4
         --enable-parser=mpeg4video
         --enable-parser=mpegvideo
 
@@ -283,7 +278,6 @@ ExternalProject_Add(ffmpeg
         --enable-protocol=subfile
         --enable-protocol=tcp
         --enable-protocol=tls
-        --enable-protocol=srt
         --enable-protocol=udp
 
         --enable-encoder=mjpeg
