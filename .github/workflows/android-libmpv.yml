@@ -130,7 +130,7 @@ jobs:
           echo "6fa26bf0459b11f1c0b0dbc29e5b940d  $w/dl/default-x86_64.jar" | md5sum -c -
           unzip -j -o "$w/dl/default-x86_64.jar" lib/x86_64/libmpv.so -d "$w/control"
           python3 -I android/smoke/make_png_playlist.py "$w/png"
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;$v_ndk" >/dev/null
+          [ -d "$ANDROID_HOME/ndk/$v_ndk" ] || { yes 2>/dev/null | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;$v_ndk" >/dev/null || true; }
           "$ANDROID_HOME/ndk/$v_ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android${v_api}-clang" \
             -O2 -Wall -o "$w/smoke" android/smoke/smoke.c -ldl
           echo "SMOKE_DIR=$w" >> "$GITHUB_ENV"
