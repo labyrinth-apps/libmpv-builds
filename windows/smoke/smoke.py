@@ -6,8 +6,8 @@
 Checks the cases the app depends on and exits non-zero on the first failure:
 - HTTPS fMP4 HLS with separate audio (drama-like) opens and a seek lands near its
   target (FFmpeg <= 7.1 runs to EOF instead);
-- MPEG-TS HLS (anime-like) plays;
-- TS segments disguised with a PNG header (anime downloads) decode;
+- MPEG-TS HLS plays;
+- TS segments disguised with a PNG header decode;
 - an .ass subtitle loads;
 - with --extended: TrueHD/MLP and VC-1 decoders exist and the bwdif deinterlacer
   can be inserted (PGS/EIA-608 are checked at build time: scripts/features_gate.sh).
@@ -231,7 +231,7 @@ def main():
         p = Mpv(lib)
         p.cmd(f'loadfile "{mpv_path(pl)}"')
         check(wait(lambda: (fnum(p.get("time-pos")) or 0) > 1.0, 60),
-              "PNG-disguised TS segments decode (anime downloads)")
+              "PNG-disguised TS segments decode")
         ass = os.path.join(tmp, "t.ass")
         with open(ass, "w", encoding="utf-8") as f:
             f.write("[Script Info]\nScriptType: v4.00+\n\n[V4+ Styles]\n"

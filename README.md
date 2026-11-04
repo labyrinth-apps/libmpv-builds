@@ -15,7 +15,7 @@ All three ship and are used by the app (2026-11-03). ARM64 Windows and Linux are
 
 ## What's different from media_kit's builds
 - **FFmpeg 8.1.3**: fMP4 HLS seeks land where asked (6.x/7.1 run to EOF after a seek).
-- **PNG/GIF-disguised HLS segments** play (wang-bin's patch; some anime providers disguise TS this way).
+- **PNG/GIF-disguised HLS segments** play (wang-bin's patch; some providers disguise TS this way).
 - **Extra formats:** TrueHD/MLP, VC-1, PGS and EIA-608 subtitles, `bwdif`/`yadif` deinterlacing.
 - **HTTPS certificate checking** against the OS trust store when the app sets `tls-verify=yes`
   (media_kit's builds had no trust store, so nothing was verified).

@@ -68,7 +68,7 @@ macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are go
 
 | patch | status | why |
 | --- | --- | --- |
-| `ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` | **added** | Copied from `windows/packages/` (wang-bin). HLS segments with a PNG/GIF header in front of TS (anime downloads) play again; FFmpeg 7+ refuses them otherwise. |
+| `ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` | **added** | Copied from `windows/packages/` (wang-bin). HLS segments with a PNG/GIF header in front of TS play again; FFmpeg 7+ refuses them otherwise. |
 | `ffmpeg-fix-ios-hdr-texture.patch` | kept, rebased | iOS GLES can't take 10-bit textures, so VideoToolbox outputs BGRA for >8-bit 4:2:0. FFmpeg 8.1 also has 10-bit 4:2:2/4:4:4 VT formats (P210/P410/P216/P416) that this patch does not cover. |
 | `mpv-audiounit-shared-session.patch` | kept, rebased | Ref-counted AVAudioSession plus the `audiounit-skip-session-management` option that media_kit sets. 0.41 already picks MixWithOthers vs exclusive itself; the patch now passes those options through. |
 | `mpv-fix-missing-objc.patch` | kept, rebased, extended | Adds `add_languages('objc')` for cocoa/audiounit. Also skips 0.41's host macOS SDK probe unless the Swift build is on: in the sandbox it finds nixpkgs' `xcrun` and appended a macOS 11.3 SDK `-isysroot` and `-L/usr/lib` to every libmpv link, iOS included. |

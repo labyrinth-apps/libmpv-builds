@@ -74,7 +74,7 @@ as `darwin/packages.lock.nix`):
 | patch | status | why |
 | --- | --- | --- |
 | `mpv/mpv_lavc_set_java_vm.patch` | kept, rebased | Exports `mpv_lavc_set_java_vm`, which media_kit's `AndroidHelper` calls to hand FFmpeg the JavaVM (MediaCodec). FFmpeg is static, so `av_jni_set_java_vm` isn't visible. The header moved to `include/mpv/client.h`. |
-| `ffmpeg/ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` | **added** | Copied from `windows/packages/` (wang-bin). HLS segments with a PNG/GIF header in front of TS (anime downloads) play again. |
+| `ffmpeg/ffmpeg-hls-support-segments-pretend-to-be-gif-png.patch` | **added** | Copied from `windows/packages/` (wang-bin). HLS segments with a PNG/GIF header in front of TS play again. |
 | `ffmpeg/hls_mp4_seek.patch` | dropped | FFmpeg 8.1 seeks fMP4 HLS correctly (the smoke test checks this). |
 | `ffmpeg/dash_base_url_escape.patch` | dropped | Upstream in FFmpeg 8.1. |
 
