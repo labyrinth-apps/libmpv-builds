@@ -20,13 +20,13 @@ s_ffmpeg=7138d28c96d9d3e3af4ee3d8cad72741f8ffb40da90c1112235dea3ecd3178a3
 
 # 3.6.x LTS: mbedtls 4.x removed APIs FFmpeg's tls_mbedtls.c uses.
 # Release tarball (includes the framework/ submodule; GitHub archives do not).
-v_mbedtls=3.6.7
-u_mbedtls=https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2
-s_mbedtls=a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6
+v_mbedtls=3.6.8
+u_mbedtls=https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.8/mbedtls-3.6.8.tar.bz2
+s_mbedtls=bc54b818e87f49c0b3281dd85d24adaede0e63b4e822e3fbd49c005a38b9595b
 
-v_dav1d=1.5.4
-u_dav1d=https://code.videolan.org/videolan/dav1d/-/archive/1.5.4/dav1d-1.5.4.tar.bz2
-s_dav1d=2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011
+v_dav1d=1.5.5
+u_dav1d=https://code.videolan.org/videolan/dav1d/-/archive/1.5.5/dav1d-1.5.5.tar.bz2
+s_dav1d=afc5378daba30eafd11d7b4f0ec863270d7b175f38393a2e1e0ff76f3a45c8b9
 
 v_libxml2=2.15.4
 u_libxml2=https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.4.tar.xz
