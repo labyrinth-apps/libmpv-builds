@@ -21,7 +21,7 @@ on:
 
 env:
   CACHE_VERSION: v1
-  BUILD_IMAGE: ghcr.io/shinchiro/archlinux@sha256:56a74bc68139d108ee082f1d0a488295eaf5af2f1b79f0cbbb7caca1c4402bbd
+  BUILD_IMAGE: ghcr.io/shinchiro/archlinux@sha256:eb6fa66bafe02c19ce52a3464342130b1210176ac6aff49265d9aef1772994eb
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
             mpv_ref: 35efcf53d59470b3941e61a50c8a3133035a093d
             ffmpeg_ref: n9.1
     container:
-      image: docker://ghcr.io/shinchiro/archlinux@sha256:56a74bc68139d108ee082f1d0a488295eaf5af2f1b79f0cbbb7caca1c4402bbd
+      image: docker://ghcr.io/shinchiro/archlinux@sha256:eb6fa66bafe02c19ce52a3464342130b1210176ac6aff49265d9aef1772994eb
     defaults:
       run:
         working-directory: windows

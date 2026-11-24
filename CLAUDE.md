@@ -38,5 +38,8 @@ Guide for working in this repo. Start with `README.md` (what ships, CI, releasin
   before a poll; a `file://` playlist can't fetch https segments.
 - **CI flakes:** ffmpeg.org resets requests from macOS runners (darwin pre-fetches with retries); the
   Windows toolchain cache expires after 7 days (re-run `windows-toolchain.yml`, 3–4 h).
+- **Windows build image:** shinchiro keeps only the newest `ghcr.io/shinchiro/archlinux:latest`, so the
+  pinned digest disappears when they push a new one (docker pull "not found"). Repin both Windows
+  workflows to the current digest (ghcr `tags/list` + manifest HEAD), then rebuild the toolchain.
 - **Measuring:** compare engines only in the same hour (A/B); day-to-day network variance swamps
   differences. Mac frame drops depend on whether the window is visible.
