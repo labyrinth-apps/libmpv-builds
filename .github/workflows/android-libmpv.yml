@@ -46,14 +46,14 @@ jobs:
           - { arch: x86_64, abi: x86_64 }
           - { arch: x86, abi: x86 }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Licence gate self-test (fake GPL configs must fail)
         run: android/scripts/test_licence_gate.sh
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -87,7 +87,7 @@ jobs:
             "$ANDROID_HOME/ndk/$v_ndk/toolchains/llvm/prebuilt/linux-x86_64/bin"
           grep -E "Message|libplacebo|android|opensles|audiotrack|egl|gpl" android/buildscripts/artifacts/licence/${{ matrix.abi }}/mpv/configure.log | head -60 || true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-${{ matrix.abi }}
           path: |
@@ -95,7 +95,7 @@ jobs:
             android/buildscripts/artifacts/default-${{ matrix.abi }}.jar.md5
           if-no-files-found: error
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-${{ matrix.abi }}-debug
           path: |
@@ -109,11 +109,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: android-x86_64
           path: dist
@@ -162,7 +162,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ needs.meta.outputs.tag }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: android-*
           path: dist
