@@ -21,11 +21,14 @@ Guide for working in this repo. Start with `README.md` (what ships, CI, releasin
 - **FFmpeg 8 configure:** component names (`pgssub`, `ccaption`), no `--disable-postproc` (removed), no
   `hls`/`srt` protocol options, buffer filters always built, the PNG patch needs `image_png_pipe` /
   `image_gif_pipe`. Unmatched `--enable-*=x` only warns: `windows/scripts/ffmpeg_options_check.sh` catches it.
-- **mpv 0.41:** `-Dsubrandr`/`-Dlibcurl` are master-only (`mpv_options_check.sh`). Current ANGLE headers
-  need the D3D9 removal backport on Windows. Without Swift (darwin) the `mac` client must not be created or
-  playback waits forever; Apple frameworks must be linked explicitly (`-Db_lundef=true` exposes them).
-- **macOS 27:** stock mpv 0.41 has no sound on 48 kHz (coreaudio channel-map misuse); the darwin build
-  carries the upstream fix. Re-check audio on every new macOS.
+- **mpv 0.42 / FFmpeg 9.1:** keep libcurl off (mpv `-Dlibcurl=disabled`, FFmpeg `--disable-libcurl`; Android
+  and darwin get it from `auto_features=disabled`/`--disable-autodetect`). With mpv's curl backend the app's
+  `stream-lavf-o` reconnect options don't apply, and curl has no Secure Transport. Windows doesn't start from
+  `auto_features=disabled`, so each new mpv auto feature must be turned off there by hand. libplacebo >= 7.387.
+- **Apple without Swift:** the `mac` client must not be created or playback waits forever; Apple frameworks
+  must be linked explicitly (`-Db_lundef=true` exposes them).
+- **macOS 27:** mpv 0.41 had no sound on 48 kHz (fixed in 0.42). CI runs macOS 15: re-check audio on a real
+  Mac on every mpv bump and new macOS.
 - **xcframework tool:** detect iOS device slices by `platform IOS` (LC_BUILD_VERSION, minos 16).
 - **TLS:** mpv's `tls-verify` reaches HLS segments (no FFmpeg default patch needed). mbedtls finishes the
   handshake and then hangs up on a bad certificate, so the smoke gate checks "connected but no request",

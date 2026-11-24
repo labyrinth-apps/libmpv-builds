@@ -20,8 +20,8 @@ permissions:
   contents: read
 
 env:
-  MPV_VERSION: 0.41.0
-  FFMPEG_VERSION: 8.1.3
+  MPV_VERSION: 0.42.0
+  FFMPEG_VERSION: "9.1"
 
 jobs:
   meta:

@@ -1,7 +1,7 @@
 # LGPL-only "video" FFmpeg (media_kit's libmpv-win32-video-cmake 8ddbe54 flavour, trimmed of
-# libraries only unused filters need). Version from -DFFMPEG_REF (default n8.1.3).
+# libraries only unused filters need). Version from -DFFMPEG_REF (default n9.1).
 if(NOT DEFINED FFMPEG_REF)
-    set(FFMPEG_REF "n8.1.3")
+    set(FFMPEG_REF "n9.1")
 endif()
 
 ExternalProject_Add(ffmpeg
@@ -75,6 +75,8 @@ ExternalProject_Add(ffmpeg
 
         # TLS via Windows (Schannel), verified against the system trust store
         --enable-schannel
+        # 9.1 autodetects libcurl; keep FFmpeg's own http/tls
+        --disable-libcurl
 
         --enable-libdav1d
 

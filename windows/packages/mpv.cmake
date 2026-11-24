@@ -1,11 +1,7 @@
 # LGPL-only libmpv (media_kit flavour: -Dgpl=false, no Lua/JS/OpenAL/VapourSynth/DVD/rubberband;
-# plus shinchiro's newer extras off). Version from -DMPV_REF (default v0.41.0).
+# plus shinchiro's newer extras off). Version from -DMPV_REF (default v0.42.0).
 if(NOT DEFINED MPV_REF)
-    set(MPV_REF "v0.41.0")
-endif()
-# 0.41.0 only: newer ANGLE headers dropped D3D9 (mpv master has this).
-if(MPV_REF STREQUAL "v0.41.0")
-    set(mpv_patch PATCH_COMMAND ${EXEC} git apply ${CMAKE_CURRENT_SOURCE_DIR}/mpv-0.41-angle-remove-d3d9.patch)
+    set(MPV_REF "v0.42.0")
 endif()
 
 ExternalProject_Add(mpv
@@ -26,7 +22,6 @@ ExternalProject_Add(mpv
     SOURCE_DIR ${SOURCE_LOCATION}
     GIT_CLONE_FLAGS "--filter=tree:0"
     GIT_RESET ${MPV_REF}
-    ${mpv_patch}
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${EXEC} CONF=1 meson setup <BINARY_DIR> <SOURCE_DIR>
         --prefix=${MINGW_INSTALL_PREFIX}
@@ -56,6 +51,11 @@ ExternalProject_Add(mpv
         -Dvulkan=enabled
         -Dvapoursynth=disabled
         -Dsixel=disabled
+        # 0.42 auto features, off as on Android/Apple: lavf networking (reconnect + Schannel), no extras
+        -Dlibcurl=disabled
+        -Dsubrandr=disabled
+        -Damf=disabled
+        -Ddvda=disabled
         ${mpv_gl}
         -Dc_args='-Wno-error=int-conversion'
     BUILD_COMMAND ${EXEC} LTO_JOB=1 PDB=1 ninja -C <BINARY_DIR>

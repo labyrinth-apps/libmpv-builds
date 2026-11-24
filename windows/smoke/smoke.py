@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Smoke test for a built libmpv (ctypes, headless: vo=null ao=null).
 
-  python smoke.py <path/to/libmpv-2.dll> [--expect-mpv 0.41.0] [--expect-ffmpeg 8.1.3]
+  python smoke.py <path/to/libmpv-2.dll> [--expect-mpv 0.42.0] [--expect-ffmpeg 9.1]
 
 Checks the cases the app depends on and exits non-zero on the first failure:
 - HTTPS fMP4 HLS with separate audio (drama-like) opens and a seek lands near its

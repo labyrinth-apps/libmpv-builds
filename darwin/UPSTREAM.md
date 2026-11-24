@@ -24,11 +24,11 @@ Built by `.github/workflows/darwin-libmpv.yml` on GitHub Actions (`macos-15`, Xc
 
 | package | upstream | now |
 | --- | --- | --- |
-| mpv | 0.36.0 | 0.41.0 |
-| FFmpeg | 6.0 | 8.1.3 |
-| libplacebo | — | 7.360.1 (new, static, see below) |
+| mpv | 0.36.0 | 0.42.0 |
+| FFmpeg | 6.0 | 9.1 |
+| libplacebo | — | 7.387.0 (new, static, see below; mpv 0.42 needs >= 7.387) |
 | mbedtls | 3.4.1 | removed (2026-11-03): FFmpeg uses Secure Transport; `mk-pkg-mbedtls` and its lock entry are unused |
-| dav1d | 1.2.1 | 1.5.4 |
+| dav1d | 1.2.1 | 1.5.5 |
 | libass | 0.17.1 | 0.17.5 |
 | fribidi | 1.0.13 | 1.0.18 |
 | harfbuzz | 8.1.1 | 14.6.0 |
@@ -41,12 +41,12 @@ libplacebo is required since mpv 0.37. It is built static, OpenGL-only (vulkan, 
 glslang, lcms, dovi/libdovi, d3d11, unwind, xxhash, gl-proc-addr off) and linked into
 libmpv, so it adds no framework (15 today: upstream v0.7.2's 18 minus the three mbedtls ones). Its GitHub
 tarball lacks submodules, so `glad` and `fast_float` are fetched separately at the
-v7.360.1 submodule commits; glad's generator runs with nixpkgs' jinja2. 7.360.1 is the
-latest release that has had time to settle; 7.387.0 was a week old at import time.
+v7.387.0 submodule commits (plus Vulkan-Headers, below); glad's generator runs with nixpkgs' jinja2.
+7.387.0 also vendors `3rdparty/json.h` as a plain file (in the tarball, nothing to fetch).
 
 **mpv options.** The configure step now starts from `-Dauto_features=disabled` and enables
 only `iconv uchardet zlib gl plain-gl`, plus `cocoa coreaudio gl-cocoa videotoolbox-gl` on
-macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are gone.
+macOS and `audiounit ios-gl` on iOS. Options that no longer exist in 0.41 are gone. 0.42's new features (libcurl, subrandr, amf, dvda) stay off through `auto_features=disabled`, so networking is still FFmpeg's http/tls.
 
 **Minimum OS.** `cross-files/*.ini`: iOS 16.0 (device; the simulators use
 `-mios-simulator-version-min=16.0`) and macOS 13.5 (upstream had 9.0/12.0/10.9).
@@ -89,7 +89,7 @@ naming as upstream. Also `checksums.txt` (SwiftPM checksums) and
 `libmpvChecksums`.
 - `nix/utils/xctoolchain/xcodebuild.swift`: detect iOS device binaries by `LC_BUILD_VERSION` `platform IOS` too. Upstream only matched `LC_VERSION_MIN_IPHONEOS`, which the linker no longer emits at minos ≥ 12, so the device slice came out as `unknown-arm64`.
 - `patches/mpv-fix-mac-client-without-swift.patch`: create mpv's "mac" client only when Swift is built. Without Swift nothing services it, and mpv 0.41 waits for every client to initialize before starting playback, so nothing ever played (found by the macOS smoke test; reproduced locally).
-- `patches/mpv-fix-coreaudio-macos27.patch`: backport of mpv master af067b5ea8, c5d391adba and 3dae21b1ed. On macOS 27, mpv 0.41's coreaudio output fails to start on 48 kHz audio (`unable to set the input channel layout on the audio unit (-50)`), so there's no sound (mpv #18384). Homebrew's mpv 0.41 has the same bug. Drop when moving past 0.41.
+- Dropped (2026-11-24): `mpv-fix-coreaudio-macos27.patch` (mpv af067b5ea8, c5d391adba, 3dae21b1ed; no sound on 48 kHz on macOS 27, mpv #18384). mpv 0.42 includes all three; the CI runner is macOS 15, so check sound on a macOS 27 Mac after each mpv bump.
 - TLS: FFmpeg uses Secure Transport (`--enable-securetransport`) instead of mbedtls, so the app's
   `tls-verify=yes` checks against the system trust store. The Mbedtls/Mbedcrypto/Mbedx509 frameworks are
   gone (15 frameworks, not 18). Secure Transport is deprecated by Apple but present in iOS/macOS 27; it

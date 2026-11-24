@@ -10,13 +10,13 @@ v_api=21
 ## Dependency versions (same pins as darwin/packages.lock.nix)
 # Each entry: version, URL, sha256 of the downloaded tarball.
 
-v_mpv=0.41.0
-u_mpv=https://github.com/mpv-player/mpv/archive/refs/tags/v0.41.0.tar.gz
-s_mpv=ee21092a5ee427353392360929dc64645c54479aefdb5babc5cfbb5fad626209
+v_mpv=0.42.0
+u_mpv=https://github.com/mpv-player/mpv/archive/refs/tags/v0.42.0.tar.gz
+s_mpv=bcfebbfa2b65a6d88dc97ea18117831072373e38b5785a2afb874ed4df5070dd
 
-v_ffmpeg=8.1.3
-u_ffmpeg=https://ffmpeg.org/releases/ffmpeg-8.1.3.tar.xz
-s_ffmpeg=7138d28c96d9d3e3af4ee3d8cad72741f8ffb40da90c1112235dea3ecd3178a3
+v_ffmpeg=9.1
+u_ffmpeg=https://ffmpeg.org/releases/ffmpeg-9.1.tar.xz
+s_ffmpeg=1a4d394ae63d190a526cd052eb4415c156b5c5e2df37efab41a7de0b8fde2433
 
 # 3.6.x LTS: mbedtls 4.x removed APIs FFmpeg's tls_mbedtls.c uses.
 # Release tarball (includes the framework/ submodule; GitHub archives do not).
@@ -48,11 +48,11 @@ v_libass=0.17.5
 u_libass=https://github.com/libass/libass/releases/download/0.17.5/libass-0.17.5.tar.xz
 s_libass=2dca25c0e0c837ddf00b52011b3f82cac1e4ddd3ad018227806b0c2288864acc
 
-# libplacebo is required since mpv 0.37; built static (OpenGL only) into libmpv.
-v_libplacebo=7.360.1
-u_libplacebo=https://github.com/haasn/libplacebo/archive/refs/tags/v7.360.1.tar.gz
-s_libplacebo=d05fdf90bea2f629eaa2d115e909fd356388ac639e54f77b87a018a6d76224bd
-# GitHub tarballs omit submodules: libplacebo v7.360.1's 3rdparty/{glad,fast_float} commits
+# libplacebo is required since mpv 0.37 (>= 7.387 for 0.42); built static (OpenGL only) into libmpv.
+v_libplacebo=7.387.0
+u_libplacebo=https://github.com/haasn/libplacebo/archive/refs/tags/v7.387.0.tar.gz
+s_libplacebo=f9e62d3774a9c4cfd198ec3abaa88294aaade2e31c04d5ab02bcf4abc98b1df5
+# GitHub tarballs omit submodules: libplacebo v7.387.0's 3rdparty/{glad,fast_float} commits
 u_glad=https://github.com/Dav1dde/glad/archive/73db193f853e2ee079bf3ca8a64aa2eaf6459043.tar.gz
 s_glad=33dbeae44d8315ece57e14eba4b1b4a02ac5406d1c4f49cd20048c91522a6b9a
 u_fast_float=https://github.com/fastfloat/fast_float/archive/97b54ca9e75f5303507699d27c6b4f4efe4641a1.tar.gz

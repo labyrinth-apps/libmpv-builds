@@ -27,9 +27,9 @@ as `darwin/packages.lock.nix`):
 
 | package | upstream | now |
 | --- | --- | --- |
-| mpv | 0.36.0-549 (`78d4374`) | 0.41.0 |
-| FFmpeg | 6.0 | 8.1.3 |
-| libplacebo | — | 7.360.1 (new, static, OpenGL only; plus its glad/fast_float submodule commits) |
+| mpv | 0.36.0-549 (`78d4374`) | 0.42.0 (libcurl off: auto_features=disabled) |
+| FFmpeg | 6.0 | 9.1 (`--disable-libcurl`) |
+| libplacebo | — | 7.387.0 (new, static, OpenGL only; plus its glad/fast_float submodule commits) |
 | mbedtls | 3.4.0 | 3.6.8 (3.6 LTS until 2027-03; 4.x removed APIs FFmpeg uses) |
 | dav1d | 1.2.0 | 1.5.5 |
 | libass | 0.17.1 | 0.17.5 |

@@ -45,6 +45,7 @@ cpuflags=
 	--disable-demuxers \
 	--disable-parsers \
 	--disable-protocols \
+	--disable-libcurl \
 	--disable-devices \
 	--disable-filters \
 	--disable-doc \

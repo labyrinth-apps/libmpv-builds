@@ -2,20 +2,20 @@
 # tarball. See nix/utils/fetch-tarball/default.nix.
 {
   dav1d = {
-    version = "1.5.4";
-    url = "https://code.videolan.org/videolan/dav1d/-/archive/1.5.4/dav1d-1.5.4.tar.bz2";
-    sha256 = "2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011";
+    version = "1.5.5";
+    url = "https://code.videolan.org/videolan/dav1d/-/archive/1.5.5/dav1d-1.5.5.tar.bz2";
+    sha256 = "afc5378daba30eafd11d7b4f0ec863270d7b175f38393a2e1e0ff76f3a45c8b9";
   };
   fast_float = {
-    # libplacebo v7.360.1 3rdparty/fast_float submodule commit
+    # libplacebo v7.387.0 3rdparty/fast_float submodule commit
     version = "97b54ca9";
     url = "https://github.com/fastfloat/fast_float/archive/97b54ca9e75f5303507699d27c6b4f4efe4641a1.tar.gz";
     sha256 = "2b132274539286e41f37857cac22aa8441d21bd86d55de825a3342b149f66801";
   };
   ffmpeg = {
-    version = "8.1.3";
-    url = "https://ffmpeg.org/releases/ffmpeg-8.1.3.tar.xz";
-    sha256 = "7138d28c96d9d3e3af4ee3d8cad72741f8ffb40da90c1112235dea3ecd3178a3";
+    version = "9.1";
+    url = "https://ffmpeg.org/releases/ffmpeg-9.1.tar.xz";
+    sha256 = "1a4d394ae63d190a526cd052eb4415c156b5c5e2df37efab41a7de0b8fde2433";
   };
   freetype = {
     version = "2.14.3";
@@ -28,7 +28,7 @@
     sha256 = "1de5e8073d035388b71d0b2d452b1da1f8caeea8a7702997b401fe1b6250727f";
   };
   glad = {
-    # libplacebo v7.360.1 3rdparty/glad submodule commit
+    # libplacebo v7.387.0 3rdparty/glad submodule commit
     version = "73db193f";
     url = "https://github.com/Dav1dde/glad/archive/73db193f853e2ee079bf3ca8a64aa2eaf6459043.tar.gz";
     sha256 = "33dbeae44d8315ece57e14eba4b1b4a02ac5406d1c4f49cd20048c91522a6b9a";
@@ -39,11 +39,11 @@
     sha256 = "d07a007327277708a2a73ae437887cdbaf282937f6d03ca5467723e9099af586";
   };
   vulkan-headers = {
-    # libplacebo v7.360.1 3rdparty/Vulkan-Headers submodule commit (headers only:
+    # libplacebo v7.387.0 3rdparty/Vulkan-Headers submodule commit (headers only:
     # libplacebo's public vulkan.h is compiled even with vulkan disabled)
-    version = "450bd223";
-    url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/450bd2232225d6c7728a4108055ac2e37cef6475.tar.gz";
-    sha256 = "26df9841c30806a994e2fdf42f7c87bcb1ced9db9a06033469123939fb3fa075";
+    version = "74d8a6cb";
+    url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/74d8a6cb930c68ef617b202c3ff3c59d919e086b.tar.gz";
+    sha256 = "75967a8288ff16044a86d1af462b96d2e75c435937efb75f2bb4102ab0382f29";
   };
   libass = {
     version = "0.17.5";
@@ -51,9 +51,9 @@
     sha256 = "2dca25c0e0c837ddf00b52011b3f82cac1e4ddd3ad018227806b0c2288864acc";
   };
   libplacebo = {
-    version = "7.360.1";
-    url = "https://github.com/haasn/libplacebo/archive/refs/tags/v7.360.1.tar.gz";
-    sha256 = "d05fdf90bea2f629eaa2d115e909fd356388ac639e54f77b87a018a6d76224bd";
+    version = "7.387.0";
+    url = "https://github.com/haasn/libplacebo/archive/refs/tags/v7.387.0.tar.gz";
+    sha256 = "f9e62d3774a9c4cfd198ec3abaa88294aaade2e31c04d5ab02bcf4abc98b1df5";
   };
   libpng = {
     version = "1.6.59";
@@ -78,9 +78,9 @@
     sha256 = "a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6";
   };
   mpv = {
-    version = "0.41.0";
-    url = "https://github.com/mpv-player/mpv/archive/refs/tags/v0.41.0.tar.gz";
-    sha256 = "ee21092a5ee427353392360929dc64645c54479aefdb5babc5cfbb5fad626209";
+    version = "0.42.0";
+    url = "https://github.com/mpv-player/mpv/archive/refs/tags/v0.42.0.tar.gz";
+    sha256 = "bcfebbfa2b65a6d88dc97ea18117831072373e38b5785a2afb874ed4df5070dd";
   };
   uchardet = {
     version = "0.0.8";
